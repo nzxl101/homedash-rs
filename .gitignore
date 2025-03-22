@@ -8,6 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-.tuono
-out
 target
+config.toml
+database.db
+data/
+.tuono/
+out/

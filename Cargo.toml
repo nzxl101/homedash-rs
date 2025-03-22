@@ -1,6 +1,6 @@
 [package]
-name = "tuono-app"
-version = "0.0.1"
+name = "homedash-rs"
+version = "1.0.0"
 edition = "2021"
 
 [[bin]]
@@ -8,6 +8,17 @@ name = "tuono"
 path = ".tuono/main.rs"
 
 [dependencies]
-tuono_lib = "0.17.6"
+tuono_lib = "0.19.1"
 serde = { version = "1.0.202", features = ["derive"] }
+config = "0.15.8"
+serde_derive = "1.0.217"
+reqwest = { version = "0.12.12", features = ["blocking", "json"] }
+tokio = { version = "1.43.0", features = ["full"] }
+toml = "0.8.20"
+serde_json = "1.0.139"
+rusqlite = { version = "0.33.0", features = ["bundled"] }
+base64 = "0.22.1"
+quick-xml = { version = "0.37.2", features = ["serialize"] }
+sysinfo = { version = "0.33.1", features = ["serde"] }
+# openssl = { version = "0.10", features = ["vendored"] }
 
