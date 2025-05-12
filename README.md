@@ -5,6 +5,9 @@
 Simple and straightforward dashboard for your homelab.  
 Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in mind.
 
+> [!IMPORTANT]  
+> This project is still under heavy development and is not ready for production use.
+
 ## Supported apps
 
 - [x] AdGuard Home
