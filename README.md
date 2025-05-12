@@ -26,7 +26,7 @@ Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in m
 - It's not possible to toggle apps on/off in the UI yet, so even if an app is not enabled in the config, it will still display the card in the dashboard.
 - Data cards can not be moved or resized.
 - Grid layout is hardcoded and can not be changed.
-- **If you'd like to tackle any of these limitations, feel free to open an issue or a PR!**
+- **If you'd like to tackle any of these limitations, feel free to open a PR!**
 
 # Screenshots
 
@@ -35,8 +35,8 @@ Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in m
 
 # Installation
 
-Simplest way to deploy homedash-rs is to use Docker.
-Example docker-compose.yml:
+Simplest way to deploy homedash-rs is to use Docker.  
+Example `docker-compose.yml`:
 
 ```yaml
 services:
