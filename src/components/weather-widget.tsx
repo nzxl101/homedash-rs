@@ -135,10 +135,8 @@ const weatherCodes: Weather = {
     },
 };
 
-export function WeatherWidget() {
+export function WeatherWidget({ lat, long }: { lat: number; long: number }) {
     const [currentTime, setCurrentTime] = useState(new Date());
-    const lat = 50.7685;
-    const long = 8.5808;
 
     const { data: weather } = useQuery<WeatherResponse>({
         queryKey: ["weather"],

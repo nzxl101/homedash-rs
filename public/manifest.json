@@ -1,6 +1,6 @@
 {
-    "name": "lynx.home",
-    "short_name": "L Y N X",
+    "name": "homedash-rs",
+    "short_name": "homedash-rs",
     "description": "Homelab Dashboard",
     "start_url": "/",
     "display": "standalone",

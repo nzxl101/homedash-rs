@@ -32,7 +32,7 @@ const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boo
 ));
 AppIcon.displayName = "AppIcon";
 
-export default function Dashboard() {
+export default function Dashboard({ username, weather }: { username: string | undefined; weather: { lat: number; long: number } | undefined }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ["metrics-data"],
         queryFn: async () => {
@@ -234,9 +234,11 @@ export default function Dashboard() {
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                 <div className="min-h-screen bg-black text-white p-6 font-sans select-none">
                     <header className="mb-12 flex justify-between items-start">
-                        <h1 className="text-4xl font-bold tracking-tight">Good {getTimeOfDay()}, nzxl.</h1>
+                        <h1 className="text-4xl font-bold tracking-tight">
+                            Good {getTimeOfDay()}, {username ?? "user"}.
+                        </h1>
                         <div className="flex items-center space-x-4">
-                            <WeatherWidget />
+                            <WeatherWidget lat={weather?.lat ?? 0} long={weather?.long ?? 0} />
                             <button onClick={() => setIsLocked(!isLocked)} className="text-zinc-400 hover:text-white transition-colors duration-200">
                                 {isLocked ? <Lock className="h-6 w-6" /> : <Unlock className="h-6 w-6" />}
                             </button>

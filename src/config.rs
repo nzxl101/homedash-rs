@@ -50,6 +50,8 @@ pub struct HttpConfig {
 pub struct ConfigFields {
     pub version: u8,
     pub base_url: String,
+    pub username: String,
+    pub weather_location: Vec<f64>,
     pub tvdb: APIOauthConfig,
     pub tmdb: APIOauthConfig,
     pub sonarr: APIKeyConfig,
@@ -94,6 +96,8 @@ fn create_default_config() -> ConfigFields {
     ConfigFields {
         version: 1,
         base_url: String::from("http://localhost:3000"),
+        username: String::from("user"),
+        weather_location: vec![0.0, 0.0],
         tvdb: APIOauthConfig {
             enabled: false,
             api_key: String::new(),
