@@ -2,7 +2,7 @@
 
 # homedash-rs
 
-Simple and straightforward dashboard for your homelab.
+Simple and straightforward dashboard for your homelab.  
 Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in mind.
 
 ## Supported apps
