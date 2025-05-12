@@ -1,6 +1,7 @@
 use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
 use crate::{
     config::APIOauthConfig,
@@ -8,7 +9,7 @@ use crate::{
     oauth::{retrieve_oauth, OAuthFields},
 };
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TVDBV4Series {
     pub name: String,
@@ -16,7 +17,7 @@ pub struct TVDBV4Series {
     pub id: u32,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TVDBV4SeriesData {
     pub data: TVDBV4Series,

@@ -1,34 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { bytesToSize } from "@/lib/utils";
-
-interface ProxmoxNode {
-    node: string;
-    status: {
-        data: {
-            cpu: number;
-            memory: {
-                used: number;
-                total: number;
-            };
-        };
-    };
-    lxc: {
-        data: Array<{
-            status: string;
-            name: string;
-        }>;
-    };
-    qemu: {
-        data: Array<{
-            status: string;
-            name: string;
-        }>;
-    };
-}
+import { ProxmoxV2Data } from "tuono/types";
 
 export function Proxmox() {
-    const { data, isLoading, error } = useQuery<ProxmoxNode[]>({
+    const { data, isLoading, error } = useQuery<ProxmoxV2Data[]>({
         queryKey: ["proxmox-node"],
         queryFn: () => fetch("/api/proxmox/node").then((res) => res.json()),
         refetchInterval: 3 * 60 * 1000,

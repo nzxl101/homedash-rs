@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { AdGuardStats } from "tuono/types";
 
 export function AdGuard() {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<AdGuardStats>({
         queryKey: ["adguard-stats"],
         queryFn: () => fetch("/api/adguard/stats").then((res) => res.json()),
         refetchInterval: 3 * 60e3,
@@ -26,11 +27,11 @@ export function AdGuard() {
                     </div>
                     <div className="bg-zinc-800 p-2 rounded-md flex flex-col justify-between">
                         <span className="text-zinc-400 text-xs">Filtered</span>
-                        <div className="text-white text-sm">{isLoading || error ? "..." : data?.num_replaced_safebrowsing + data?.num_replaced_safesearch + data?.num_replaced_parental}</div>
+                        <div className="text-white text-sm">{isLoading || error ? "..." : (data?.num_replaced_safebrowsing ?? 0) + (data?.num_replaced_safesearch ?? 0) + (data?.num_replaced_parental ?? 0)}</div>
                     </div>
                     <div className="bg-zinc-800 p-2 rounded-md flex flex-col justify-between">
                         <span className="text-zinc-400 text-xs">Latency</span>
-                        <div className="text-white text-sm">{isLoading || error ? "..." : (data?.avg_processing_time * 1000).toFixed(2)}ms</div>
+                        <div className="text-white text-sm">{isLoading || error ? "..." : ((data?.avg_processing_time ?? 0) * 1000).toFixed(2)}ms</div>
                     </div>
                 </div>
             </CardContent>

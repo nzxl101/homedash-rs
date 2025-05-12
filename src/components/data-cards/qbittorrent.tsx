@@ -2,26 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { bytesToSize } from "@/lib/utils";
 import { ArrowDown, ArrowUp, Check, Loader, Pause, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-
-interface Torrent {
-    name: string;
-    size: number;
-    progress: number;
-    state: string;
-    num_seeds: number;
-    num_leechs: number;
-    dlspeed: number;
-    upspeed: number;
-    eta: number;
-    ratio: number;
-}
+import { QBitV2Torrent } from "tuono/types";
 
 export function QBittorrent() {
     const {
         data: torrents = [],
         isLoading,
         error,
-    } = useQuery<Torrent[]>({
+    } = useQuery<QBitV2Torrent[]>({
         queryKey: ["qbittorrent-torrents"],
         queryFn: () => fetch("/api/qbittorrent/torrents").then((res) => res.json()),
         refetchInterval: 3 * 60 * 1000,

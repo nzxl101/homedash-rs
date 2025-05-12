@@ -3,54 +3,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { trimText } from "@/lib/utils";
 import { useQuery, useQueries, UseQueryResult } from "@tanstack/react-query";
 import { useMemo } from "react";
+import { OverseerrV1Request, OverseerrV1Requests, OverseerrV1RequestsCount, TMDB3Movie, TVDBV4SeriesData } from "tuono/types";
 
-// Define interfaces for type safety
-interface MediaType {
-    tvdbId?: number;
-    tmdbId?: number;
-    mediaType: "movie" | "tv";
-    title?: string;
-}
-
-interface RequestedBy {
-    plexUsername: string;
-}
-
-interface OverseerrRequest {
-    media: MediaType;
-    requestedBy: RequestedBy;
-}
-
-// TMDB response format
-interface TMDBDetails {
-    title?: string;
-    name?: string;
-    poster_path?: string;
-}
-
-// TVDB response format
-interface TVDBDetails {
-    data: {
-        name: string;
-        image: string;
-        id: number;
-    };
-}
-
-// Union type to handle both formats
-type MediaDetails = TMDBDetails | TVDBDetails;
-
-interface RequestsResponse {
-    results: OverseerrRequest[];
-}
-
-interface RequestsCountResponse {
-    processing: number;
-    available: number;
-}
+type MediaDetails = TMDB3Movie | TVDBV4SeriesData;
 
 interface RequestItemProps {
-    request: OverseerrRequest;
+    request: OverseerrV1Request;
     mediaQuery: UseQueryResult<MediaDetails>;
 }
 
@@ -61,11 +19,11 @@ const RequestItem = ({ request, mediaQuery }: RequestItemProps) => {
     let title, posterUrl;
 
     if (type === "tv" && mediaData && typeof mediaData === "object" && "data" in mediaData) {
-        title = mediaData.data.name || request.media.title || "Unknown";
+        title = mediaData.data.name || "Unknown";
         posterUrl = mediaData.data.image || "";
     } else {
-        const tmdbData = mediaData as TMDBDetails;
-        title = tmdbData?.title || tmdbData?.name || request.media.title || "Unknown";
+        const tmdbData = mediaData as TMDB3Movie;
+        title = tmdbData?.title || "Unknown";
         const posterPath = tmdbData?.poster_path || "";
         posterUrl = posterPath ? `https://image.tmdb.org/t/p/w200${posterPath}` : "";
     }
@@ -74,7 +32,7 @@ const RequestItem = ({ request, mediaQuery }: RequestItemProps) => {
         <li className="text-sm">
             <Tooltip>
                 <TooltipTrigger className="cursor-pointer text-zinc-400">
-                    <span className="text-white">{trimText(title.trim(), 20)}</span> <span className="text-zinc-400">by {request.requestedBy.plexUsername.trim()}</span>
+                    <span className="text-white">{trimText(title.trim(), 25)}</span> <span className="text-zinc-400">by {request.requestedBy.plexUsername.trim()}</span>
                 </TooltipTrigger>
                 <TooltipContent side="left" align="start" alignOffset={-100} className="!bg-transparent">
                     {posterUrl && (
@@ -97,11 +55,11 @@ export function Overseerr() {
                 const [requests, requestsCount] = await Promise.all([
                     fetch("/api/overseerr/requests").then((res) => {
                         if (!res.ok) throw new Error("Failed to fetch requests");
-                        return res.json() as Promise<RequestsResponse>;
+                        return res.json() as Promise<OverseerrV1Requests>;
                     }),
                     fetch("/api/overseerr/requests_count").then((res) => {
                         if (!res.ok) throw new Error("Failed to fetch request count");
-                        return res.json() as Promise<RequestsCountResponse>;
+                        return res.json() as Promise<OverseerrV1RequestsCount>;
                     }),
                 ]);
 
@@ -167,7 +125,7 @@ export function Overseerr() {
                     </div>
                     <div className="col-span-2 sm:col-span-4 mt-2">
                         <h4 className="text-sm font-medium text-zinc-400 mb-2">Recent Requests:</h4>
-                        <ul className="space-y-2">{requestList}</ul>
+                        <ul className="space-y-2 text-left text-nowrap">{requestList}</ul>
                     </div>
                 </div>
             </CardContent>

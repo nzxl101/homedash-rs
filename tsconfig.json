@@ -25,6 +25,6 @@
             "@/*": ["./src/*"]
         }
     },
-    "include": ["src", "tuono.config.ts", "**/*.ts", "**/*.tsx"],
+    "include": ["src", "tuono.config.ts", "**/*.ts", "**/*.tsx", "./.tuono/types.ts"],
     "exclude": ["node_modules"]
 }

@@ -1,8 +1,9 @@
 use reqwest::{Client, Response}; // Remove blocking
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TautulliV2Session {
     pub grandparent_title: Option<String>,
@@ -19,7 +20,7 @@ pub struct TautulliV2Session {
     pub stream_video_bitrate: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TautulliV2Data {
     pub stream_count: Option<String>,
@@ -32,7 +33,7 @@ pub struct TautulliV2Data {
     pub wan_bandwidth: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TautulliV2Response {
     pub result: Option<String>,
@@ -40,7 +41,7 @@ pub struct TautulliV2Response {
     pub data: Option<TautulliV2Data>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TautulliV2Sessions {
     pub response: TautulliV2Response,

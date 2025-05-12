@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { bytesToSize } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { DockwatchStatsResponse } from "tuono/types";
 
 export function Docker() {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<DockwatchStatsResponse>({
         queryKey: ["dockwatch-overview"],
         queryFn: () => fetch("/api/dockwatch/overview").then((res) => res.json()),
         refetchInterval: 3 * 60 * 1000,
@@ -22,7 +23,7 @@ export function Docker() {
                     </div>
                     <div className="bg-zinc-800 p-2 rounded-md flex flex-col justify-between">
                         <span className="text-zinc-400 text-xs">Health</span>
-                        <div className="text-white text-sm">{isLoading || error ? "..." : `${data?.response.health.healthy}/${data?.response.health.unhealthy + data?.response.health.unknown}`}</div>
+                        <div className="text-white text-sm">{isLoading || error ? "..." : `${data?.response.health.healthy}/${(data?.response.health.unhealthy ?? 0) + (data?.response.health.unknown ?? 0)}`}</div>
                     </div>
                     <div className="bg-zinc-800 p-2 rounded-md flex flex-col justify-between">
                         <span className="text-zinc-400 text-xs">Updates</span>
@@ -30,7 +31,7 @@ export function Docker() {
                     </div>
                     <div className="bg-zinc-800 p-2 rounded-md flex flex-col justify-between">
                         <span className="text-zinc-400 text-xs">Network</span>
-                        <div className="text-white text-sm">{isLoading || error ? "..." : bytesToSize(data?.response.usage.netIO)}</div>
+                        <div className="text-white text-sm">{isLoading || error ? "..." : bytesToSize(data?.response.usage.netIO ?? 0)}</div>
                     </div>
                 </div>
             </CardContent>

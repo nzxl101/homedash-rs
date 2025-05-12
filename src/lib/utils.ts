@@ -102,7 +102,35 @@ export const getIconURL = (app: string): string => {
 export const trimText = (text: string, maxLength: number): string => {
     if (text.length <= maxLength) {
         return text;
-    } else {
-        return text.substring(0, maxLength) + "...";
     }
+
+    let visibleLength = 0;
+    let i = 0;
+
+    // Count characters based on their visual width
+    while (i < text.length && visibleLength < maxLength) {
+        // Check if the character is a wide character (CJK, emoji, etc.)
+        const char = text.charAt(i);
+        const code = text.codePointAt(i) || 0;
+
+        // East Asian Wide (Chinese, Japanese, Korean)
+        const isWideChar =
+            (code >= 0x1100 && code <= 0x11ff) || // Hangul Jamo
+            (code >= 0x2e80 && code <= 0x9fff) || // CJK Unified Ideographs
+            (code >= 0xac00 && code <= 0xd7af) || // Hangul Syllables
+            (code >= 0xf900 && code <= 0xfaff) || // CJK Compatibility Ideographs
+            (code >= 0xff00 && code <= 0xffef) || // Halfwidth and Fullwidth Forms
+            (code >= 0x20000 && code <= 0x2fa1f); // CJK Unified Ideographs Extension
+
+        // Add 2 for wide characters, 1 for others
+        visibleLength += isWideChar ? 2 : 1;
+
+        // If this character would exceed the limit, break
+        if (visibleLength > maxLength) break;
+
+        // Move to next character (accounting for surrogate pairs)
+        i += code > 0xffff ? 2 : 1;
+    }
+
+    return i < text.length ? text.substring(0, i) + "..." : text;
 };

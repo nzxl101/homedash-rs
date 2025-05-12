@@ -149,13 +149,12 @@ export function WeatherWidget() {
             }
             return res.json();
         },
-        refetchInterval: 30 * 60 * 1000, // 30 minutes
+        refetchInterval: 30 * 60 * 1000,
         retry: 3,
-        retryDelay: 60 * 1000, // 1 minute between retries
-        staleTime: 25 * 60 * 1000, // Consider data stale after 25 minutes
+        retryDelay: 60 * 1000,
+        staleTime: 25 * 60 * 1000,
     });
 
-    // Remove duplicate useEffect, keep only one time update
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
@@ -176,16 +175,13 @@ export function WeatherWidget() {
         return () => clearInterval(timer);
     }, []);
 
-    // Replace toLocaleTimeString with our custom formatter
     const formattedTime = formatTime(currentTime);
 
-    // Use useMemo for weather calculations to prevent unnecessary recalculations
     const { currentTemp, currentWeather } = useMemo(() => {
         const temp = Math.round(weather?.current.temperature_2m ?? 0);
         const isDay = weather?.current.is_day === 1;
         const weatherCode = weather?.current.weather_code ?? 0;
 
-        // Get the exact weather code or default to 0 if not found
         const weatherInfo = weatherCodes[weatherCode] || weatherCodes[0];
 
         return {
@@ -194,7 +190,6 @@ export function WeatherWidget() {
         };
     }, [weather]);
 
-    // Use useCallback for time updates to prevent memory leaks
     useEffect(() => {
         const timer = setInterval(() => {
             const now = new Date();
@@ -209,7 +204,6 @@ export function WeatherWidget() {
 
     return (
         <div className="flex items-center space-x-4 text-white">
-            {/* Small screen layout stays the same */}
             <div className="flex sm:hidden flex-col space-y-2">
                 <div className="flex items-center">
                     <div className="w-6 flex items-center justify-center">
@@ -223,7 +217,6 @@ export function WeatherWidget() {
                 </div>
             </div>
 
-            {/* Regular layout for larger screens */}
             <div className="hidden sm:flex items-center space-x-6">
                 <div className="flex items-center">
                     <div className="w-6 flex items-center justify-center">
@@ -234,7 +227,6 @@ export function WeatherWidget() {
                         <div className="text-sm text-gray-300">{formatDate(currentTime)}</div>
                     </div>
                 </div>
-
                 <div className="flex items-center">
                     <div className="w-6 flex items-center justify-center">{currentWeather.icon}</div>
                     <div className="ml-2">

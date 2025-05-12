@@ -254,11 +254,10 @@ dependencies = [
 
 [[package]]
 name = "colored"
-version = "2.2.0"
+version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "117725a109d387c937a1533ce01b450cbde6b88abceea8473c4d7a85853cda3c"
+checksum = "fde0e0ec90c9dfb3b4b1a0891a7dcd0e2bffde2f7efed5fe7c9bb00e5bfb915e"
 dependencies = [
- "lazy_static",
  "windows-sys 0.59.0",
 ]
 
@@ -1047,12 +1046,6 @@ dependencies = [
  "pest_derive",
  "serde",
 ]
-
-[[package]]
-name = "lazy_static"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
@@ -1912,9 +1905,9 @@ dependencies = [
 
 [[package]]
 name = "ssr_rs"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2365f46dc701312d2300fcdd3266d02c847ca8b07d4f7933c3493a2d4d4ef38"
+checksum = "ab83b50aa5c18fa672e47ed60a8d25f24872f3b0157fbd70a034c8623bee5e2c"
 dependencies = [
  "v8",
 ]
@@ -2293,9 +2286,9 @@ dependencies = [
 
 [[package]]
 name = "tuono_internal"
-version = "0.19.1"
+version = "0.19.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b7ba815e212c65a5d40ec8ee6484d36d911cd7167aa1c5e70411781a922a5cb"
+checksum = "f5af350eb7fd79c08d83c4d5165ffc094f1572d34add305759e0e8fe63c56e29"
 dependencies = [
  "serde",
  "serde_json",
@@ -2303,9 +2296,9 @@ dependencies = [
 
 [[package]]
 name = "tuono_lib"
-version = "0.19.1"
+version = "0.19.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9267b0d91a8b53e80aab2ab386af3e2f05255b233bf13751b95ed79f9db20a24"
+checksum = "34e9d727e87cf904bc32d42f9a3e8db5a30126d91bd2bbf212534aafd8f04196"
 dependencies = [
  "axum",
  "axum-extra",
@@ -2333,9 +2326,9 @@ dependencies = [
 
 [[package]]
 name = "tuono_lib_macros"
-version = "0.19.1"
+version = "0.19.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a36fb053281d5c00e0af6f70b0c9d9cde6cbb5a581e4031dd311d0dd3a72ce5"
+checksum = "6b67b1e1a539f2bcd4d64694411b40ec609c0a15c0c4d50c484b8adbbf14e10a"
 dependencies = [
  "quote",
  "syn",

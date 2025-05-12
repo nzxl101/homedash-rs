@@ -1,22 +1,23 @@
 use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
 use crate::config::APICredsConfig;
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodesData {
     data: Vec<ProxmoxV2Nodes>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2Nodes {
     node: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2Data {
     node: String,
@@ -26,53 +27,53 @@ pub struct ProxmoxV2Data {
     storage: ProxmoxV2NodeStorage,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeStatusMemory {
     used: f32,
     total: f32,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeStatusData {
     cpu: f32,
     memory: ProxmoxV2NodeStatusMemory,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeStatus {
     data: ProxmoxV2NodeStatusData,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeLXCData {
     status: String,
     name: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeLXC {
     data: Vec<ProxmoxV2NodeLXCData>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeQEMUData {
     status: String,
     name: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeQEMU {
     data: Vec<ProxmoxV2NodeQEMUData>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeStorageData {
     total: u64,
@@ -80,7 +81,7 @@ pub struct ProxmoxV2NodeStorageData {
     storage: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct ProxmoxV2NodeStorage {
     data: Vec<ProxmoxV2NodeStorageData>,

@@ -1,10 +1,11 @@
 use reqwest::{Client, Response}; // Remove blocking
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
 use crate::database::{connect_db, get_tmdb_id, insert_tmdb_id, Poster};
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct TMDB3Movie {
     pub title: String,

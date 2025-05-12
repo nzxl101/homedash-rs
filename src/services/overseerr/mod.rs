@@ -1,8 +1,9 @@
-use reqwest::{Client, Response}; // Remove blocking
+use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct OverseerrV1Media {
     tvdbId: Option<u32>,
@@ -10,26 +11,26 @@ pub struct OverseerrV1Media {
     mediaType: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct OverseerrV1RequestedBy {
     plexUsername: String,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct OverseerrV1Request {
     media: OverseerrV1Media,
     requestedBy: OverseerrV1RequestedBy,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct OverseerrV1Requests {
     results: Vec<OverseerrV1Request>,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct OverseerrV1RequestsCount {
     available: u32,

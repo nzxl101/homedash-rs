@@ -2,40 +2,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatNumber } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { PlayCircle, Film, Download, Search } from "lucide-react";
-
-interface SonarrSeries {
-    title: string;
-    id: number;
-}
-
-interface RadarrMovie {
-    title: string;
-    id: number;
-}
-
-interface WantedMissing {
-    totalRecords: number;
-}
-
-interface ProwlarrStats {
-    numberOfQueries: number;
-    numberOfGrabs: number;
-}
-
-interface ProwlarrHosts {
-    hosts: ProwlarrStats[];
-}
+import type { ProwlarrV1IndexerStats, RadarrV3Movies, RadarrV3WantedMissing, SonarrV3Series, SonarrV3WantedMissing } from "tuono/types";
 
 interface StarrData {
     sonarr: {
-        series: SonarrSeries[];
-        wantedMissing: WantedMissing;
+        series: SonarrV3Series[];
+        wantedMissing: SonarrV3WantedMissing;
     };
     radarr: {
-        movies: RadarrMovie[];
-        wantedMissing: WantedMissing;
+        movies: RadarrV3Movies[];
+        wantedMissing: RadarrV3WantedMissing;
     };
-    prowlarr: ProwlarrHosts;
+    prowlarr: ProwlarrV1IndexerStats;
 }
 
 function DataCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number }) {
@@ -53,7 +31,7 @@ function DataCard({ icon: Icon, label, value }: { icon: React.ElementType; label
 export function Starr() {
     const { data, isLoading, error } = useQuery<StarrData>({
         queryKey: ["starr-data"],
-        queryFn: async () => {
+        queryFn: async (): Promise<StarrData> => {
             const [series, sonarrWanted, movies, radarrWanted, prowlarrStats] = await Promise.all([fetch("/api/sonarr/series").then((res) => res.json()), fetch("/api/sonarr/wanted_missing").then((res) => res.json()), fetch("/api/radarr/movies").then((res) => res.json()), fetch("/api/radarr/wanted_missing").then((res) => res.json()), fetch("/api/prowlarr/stats").then((res) => res.json())]);
 
             return {
@@ -69,16 +47,7 @@ export function Starr() {
                         totalRecords: radarrWanted?.totalRecords || 0,
                     },
                 },
-                prowlarr: {
-                    hosts: prowlarrStats?.hosts?.[0]
-                        ? [prowlarrStats.hosts[0]]
-                        : [
-                              {
-                                  numberOfQueries: 0,
-                                  numberOfGrabs: 0,
-                              },
-                          ],
-                },
+                prowlarr: prowlarrStats,
             };
         },
         refetchInterval: 3 * 60 * 1000,

@@ -1,8 +1,9 @@
 use serde::Serialize;
 use std::io;
 use sysinfo::{Disks, System};
+use tuono_lib::Type;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Type)]
 pub struct SystemMetrics {
     pub cpu_usage: f32,
     pub mem_used: f64,

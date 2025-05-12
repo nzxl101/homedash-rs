@@ -1,10 +1,11 @@
 use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
 use crate::config::APICredsConfig;
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct AdGuardStats {
     pub num_dns_queries: u32,

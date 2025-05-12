@@ -1,8 +1,9 @@
-use reqwest::{Client, Response}; // Remove blocking
+use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use tuono_lib::Type;
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct Status {
     pub total: u32,
@@ -10,7 +11,7 @@ pub struct Status {
     pub stopped: u32,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct Health {
     pub healthy: u32,
@@ -18,7 +19,7 @@ pub struct Health {
     pub unknown: u32,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct Updates {
     pub uptodate: u32,
@@ -26,7 +27,7 @@ pub struct Updates {
     pub unchecked: u32,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct Usage {
     pub cpu: f32,
@@ -35,7 +36,7 @@ pub struct Usage {
     pub disk: u64,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct DockwatchStats {
     pub status: Status,
@@ -44,7 +45,7 @@ pub struct DockwatchStats {
     pub usage: Usage,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Type)]
 #[allow(unused, non_snake_case)]
 pub struct DockwatchStatsResponse {
     pub response: DockwatchStats,
