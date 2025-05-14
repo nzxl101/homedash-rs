@@ -16,9 +16,9 @@ reqwest = { version = "0.12.12", features = ["blocking", "json"] }
 tokio = { version = "1.43.0", features = ["full"] }
 toml = "0.8.20"
 serde_json = "1.0.139"
-rusqlite = { version = "0.33.0", features = ["bundled"] }
+rusqlite = { version = "0.35.0", features = ["bundled"] }
 base64 = "0.22.1"
 quick-xml = { version = "0.37.2", features = ["serialize"] }
-sysinfo = { version = "0.33.1", features = ["serde"] }
+sysinfo = { version = "0.35.0", features = ["serde"] }
 # openssl = { version = "0.10", features = ["vendored"] }
 
