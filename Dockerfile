@@ -8,7 +8,7 @@ RUN \
     corepack enable pnpm && \
     pnpm i --frozen-lockfile
 
-FROM rust:1.85.1-alpine AS rust-builder
+FROM rust:1.87.0-alpine AS rust-builder
 RUN apk add --no-cache build-base lsof jq sed pkgconfig openssl openssl-dev
 WORKDIR /app
 
