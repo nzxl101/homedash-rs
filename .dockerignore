@@ -1,0 +1,14 @@
+.gitea/
+.github/
+.git/
+.gitignore
+renovate.json
+README.md
+LICENSE.md
+components.json
+.dockerignore
+.tuono/
+data/
+node_modules/
+out/
+target/
