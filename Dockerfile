@@ -1,4 +1,4 @@
-FROM node:20.15-alpine AS node-builder
+FROM node:20.19-alpine AS node-builder
 RUN apk add --no-cache libc6-compat sed
 WORKDIR /app
 
