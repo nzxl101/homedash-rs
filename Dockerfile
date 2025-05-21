@@ -7,7 +7,7 @@ ARG VERSION=unknown
 LABEL org.opencontainers.image.version=${VERSION}
 LABEL org.opencontainers.image.revision=${COMMIT_SHA}
 LABEL org.opencontainers.image.created=${BUILD_TIME}
-LABEL org.opencontainers.image.source="https://git.nzxl.space/nzxl/homedash-rs"
+LABEL org.opencontainers.image.source="https://github.com/nzxl101/homedash-rs"
 
 # Base directory
 WORKDIR /app

@@ -78,4 +78,4 @@ jobs:
                       BUILD_TIME=${{ env.BUILD_TIME }}
                   tags: |
                       ghcr.io/${{ github.repository }}:latest
-                      ghcr.io/${{ github.repository }}:${{ env.COMMIT_SHA }}
+                      ghcr.io/${{ github.repository }}:${{ env.VERSION }}
