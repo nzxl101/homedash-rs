@@ -74,7 +74,7 @@ I'm happy to integrate any new features or bug fixes.
 
 ```bash
 git clone https://github.com/nzxl101/homedash-rs.git
-cargo install tuono@0.19.6
+cargo install tuono@0.19.7
 pnpm i --frozen-lockfile
 pnpm build
 pnpm dev

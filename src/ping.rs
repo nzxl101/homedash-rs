@@ -121,7 +121,7 @@ fn ping_url(url: &str) -> Result<u16, Box<dyn Error>> {
     thread::spawn(move || {
         let client = reqwest::blocking::Client::builder()
             .danger_accept_invalid_certs(true) // Accept invalid certificates
-            .timeout(Duration::from_millis(250))
+            .timeout(Duration::from_secs(2)) // 2s timeout
             .build()
             .unwrap();
 
