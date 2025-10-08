@@ -26,7 +26,6 @@ Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in m
 
 **Limitations**
 
-- It's not possible to toggle apps on/off in the UI yet, so even if an app is not enabled in the config, it will still display the card in the dashboard.
 - Data cards can not be moved or resized.
 - Grid layout is hardcoded and can not be changed.
 - **If you'd like to tackle any of these limitations, feel free to open a PR!**

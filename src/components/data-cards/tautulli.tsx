@@ -3,20 +3,22 @@ import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { trimText } from "@/lib/utils";
-import type { TautulliV2Response, TautulliV2Session } from "tuono/types";
+import type { TautulliV2Session, TautulliV2Sessions } from "tuono/types";
 import { Key } from "react";
 
 export function Tautulli() {
-    const { data, isLoading, error } = useQuery<TautulliV2Response>({
+    const { data, isLoading, error } = useQuery<TautulliV2Sessions>({
         queryKey: ["tautulli-data"],
         queryFn: () => fetch("/api/tautulli/sessions").then((res) => res.json()),
         refetchInterval: 3 * 60e3,
     });
 
-    const sessions = data?.data?.sessions ?? [];
+    const sessions = data?.response.data?.sessions ?? [];
+
+    if (!data) return null;
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full">
+        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Tautulli</CardTitle>
             </CardHeader>

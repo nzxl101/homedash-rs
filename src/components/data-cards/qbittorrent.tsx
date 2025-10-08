@@ -6,7 +6,7 @@ import { QBitV2Torrent } from "tuono/types";
 
 export function QBittorrent() {
     const {
-        data: torrents = [],
+        data: torrents,
         isLoading,
         error,
     } = useQuery<QBitV2Torrent[]>({
@@ -15,13 +15,15 @@ export function QBittorrent() {
         refetchInterval: 3 * 60 * 1000,
     });
 
+    if (!torrents) return null;
+
     const activeTorrents = torrents.filter((x) => x.state !== "paused").length;
     const totalDownloadSpeed = torrents.reduce((sum, item) => sum + (item.dlspeed || 0), 0);
     const totalUploadSpeed = torrents.reduce((sum, item) => sum + (item.upspeed || 0), 0);
 
     if (isLoading || error) {
         return (
-            <Card className="bg-zinc-900 border-zinc-800 h-full">
+            <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-3">
                 <CardHeader>
                     <CardTitle className="text-lg font-medium text-white">qBittorrent</CardTitle>
                 </CardHeader>
@@ -33,7 +35,7 @@ export function QBittorrent() {
     }
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full">
+        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-3">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">qBittorrent</CardTitle>
             </CardHeader>

@@ -10,6 +10,8 @@ export function Proxmox() {
         refetchInterval: 3 * 60 * 1000,
     });
 
+    if (!data) return null;
+
     const nodeData = data?.[0];
     const runningLxcs = nodeData?.lxc.data.filter((vm) => vm.status === "running").length ?? 0;
     const totalLxcs = nodeData?.lxc.data.length ?? 0;
@@ -21,7 +23,7 @@ export function Proxmox() {
     const memoryPercentage = Math.round((memoryUsed / memoryTotal) * 100);
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full min-h-[200px]">
+        <Card className="bg-zinc-900 border-zinc-800 h-full min-h-[200px] sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Proxmox</CardTitle>
             </CardHeader>

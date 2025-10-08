@@ -10,8 +10,10 @@ export function Docker() {
         refetchInterval: 3 * 60 * 1000,
     });
 
+    if (!data) return null;
+
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full min-h-[200px]">
+        <Card className="bg-zinc-900 border-zinc-800 h-full min-h-[200px] sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Docker</CardTitle>
             </CardHeader>

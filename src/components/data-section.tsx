@@ -20,27 +20,13 @@ export function ExpandableDataSection() {
             </Button>
             {isExpanded && (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                    <div className="sm:col-span-1">
-                        <Docker />
-                    </div>
-                    <div className="sm:col-span-1">
-                        <AdGuard />
-                    </div>
-                    <div className="sm:col-span-1">
-                        <Proxmox />
-                    </div>
-                    <div className="sm:col-span-1">
-                        <Starr />
-                    </div>
-                    <div className="sm:col-span-1">
-                        <Tautulli />
-                    </div>
-                    <div className="sm:col-span-1">
-                        <Overseerr />
-                    </div>
-                    <div className="sm:col-span-3">
-                        <QBittorrent />
-                    </div>
+                    <Docker />
+                    <AdGuard />
+                    <Proxmox />
+                    <Starr />
+                    <Tautulli />
+                    <Overseerr />
+                    <QBittorrent />
                 </div>
             )}
         </div>

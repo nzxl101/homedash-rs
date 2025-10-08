@@ -53,8 +53,10 @@ export function Starr() {
         refetchInterval: 3 * 60 * 1000,
     });
 
+    if (!data) return null;
+
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full">
+        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-base 2xl:text-lg font-medium text-white">⭐ Apps</CardTitle>
             </CardHeader>

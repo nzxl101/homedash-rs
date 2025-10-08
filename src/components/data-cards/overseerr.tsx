@@ -108,8 +108,10 @@ export function Overseerr() {
         return data.requests.results.map((request, index) => <RequestItem key={`${request.media.tvdbId}-${request.media.tmdbId}-${index}`} request={request} mediaQuery={mediaQueries[index]} />);
     }, [data?.requests?.results, mediaQueries, isLoading, error]);
 
+    if (!data) return null;
+
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full">
+        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Overseerr</CardTitle>
             </CardHeader>
