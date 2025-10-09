@@ -18,7 +18,7 @@ interface StarrData {
 
 function DataCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string | number }) {
     return (
-        <div className="bg-zinc-800 p-2 2xl:p-3 rounded-md flex items-center justify-between">
+        <div className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg p-2 2xl:p-3 rounded-md flex items-center justify-between">
             <div className="flex items-center">
                 <Icon className="w-4 h-4 2xl:w-5 2xl:h-5 text-zinc-400 flex-shrink-0" />
                 <span className="hidden 2xl:inline text-zinc-400 text-sm ml-2">{label}</span>
@@ -56,7 +56,7 @@ export function Starr() {
     if (!data) return null;
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
+        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-base 2xl:text-lg font-medium text-white">⭐ Apps</CardTitle>
             </CardHeader>

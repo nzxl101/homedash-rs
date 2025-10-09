@@ -18,7 +18,7 @@ export function Tautulli() {
     if (!data) return null;
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
+        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Tautulli</CardTitle>
             </CardHeader>

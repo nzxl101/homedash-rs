@@ -7,7 +7,7 @@ import { IndexData } from "tuono/types";
 export default function IndexPage({ data }: TuonoRouteProps<IndexData>): JSX.Element {
     return (
         <TooltipProvider delayDuration={0}>
-            <Dashboard username={data?.username} weather={data?.weather} />
+            <Dashboard username={data?.username} weather={data?.weather} background={data?.background} />
         </TooltipProvider>
     );
 }

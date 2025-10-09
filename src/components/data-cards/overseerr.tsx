@@ -111,17 +111,17 @@ export function Overseerr() {
     if (!data) return null;
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-1">
+        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Overseerr</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    <div className="bg-zinc-800 p-2 rounded-md col-span-1 sm:col-span-2">
+                    <div className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg p-2 rounded-md col-span-1 sm:col-span-2">
                         <span className="text-zinc-400 text-xs">Processing</span>
                         <div className="text-white text-sm">{isLoading || error ? "..." : data?.requestsCount.processing}</div>
                     </div>
-                    <div className="bg-zinc-800 p-2 rounded-md col-span-1 sm:col-span-2">
+                    <div className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg p-2 rounded-md col-span-1 sm:col-span-2">
                         <span className="text-zinc-400 text-xs">Available</span>
                         <div className="text-white text-sm">{isLoading || error ? "..." : data?.requestsCount.available}</div>
                     </div>

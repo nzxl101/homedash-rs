@@ -14,8 +14,8 @@ export function ExpandableDataSection() {
 
     return (
         <div className="mt-8">
-            <Button onClick={() => setIsExpanded(!isExpanded)} variant="ghost" className="w-full flex items-center justify-center py-2 text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors duration-200">
-                <span className="mr-2">Click here for more data</span>
+            <Button onClick={() => setIsExpanded(!isExpanded)} variant="ghost" className="w-full flex items-center justify-center py-2 text-zinc-400 hover:text-white hover:bg-transparent cursor-pointer transition-colors duration-200">
+                <span>{!isExpanded ? "Show more data" : "Hide data"}</span>
                 {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </Button>
             {isExpanded && (

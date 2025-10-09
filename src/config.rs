@@ -1,8 +1,7 @@
-use std::io::Write;
-
 use config::{Config, ConfigError, File};
 use serde::Serialize;
 use serde_derive::Deserialize;
+use std::io::Write;
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
 #[allow(unused)]
@@ -52,6 +51,7 @@ pub struct ConfigFields {
     pub base_url: String,
     pub username: String,
     pub weather_location: Vec<f64>,
+    pub background_url: Option<String>,
     pub tvdb: APIOauthConfig,
     pub tmdb: APIOauthConfig,
     pub sonarr: APIKeyConfig,
@@ -82,6 +82,8 @@ pub struct CookieValues {
     pub cookie: String,
 }
 
+const LATEST_CONFIG_VERSION: u8 = 2; // Update on config structure changes
+
 fn get_config_path() -> String {
     let path = if std::path::Path::new("data").exists() {
         "data/config.toml"
@@ -94,10 +96,11 @@ fn get_config_path() -> String {
 
 fn create_default_config() -> ConfigFields {
     ConfigFields {
-        version: 1,
+        version: LATEST_CONFIG_VERSION,
         base_url: String::from("http://localhost:3000"),
         username: String::from("user"),
         weather_location: vec![0.0, 0.0],
+        background_url: Some(String::from("")),
         tvdb: APIOauthConfig {
             enabled: false,
             api_key: String::new(),
@@ -173,6 +176,36 @@ fn create_default_config() -> ConfigFields {
     }
 }
 
+pub fn migrate_config(mut config: ConfigFields) -> ConfigFields {
+    let mut migrated = false;
+
+    while config.version < LATEST_CONFIG_VERSION {
+        match config.version {
+            1 => {
+                if config.background_url.is_none() {
+                    config.background_url = Some(String::from(""));
+                }
+                config.version = 2;
+                migrated = true;
+            }
+            _ => {
+                config.version += 1;
+                migrated = true;
+            }
+        }
+    }
+
+    if migrated {
+        if let Ok(toml_string) = toml::to_string(&config) {
+            if let Ok(mut file) = std::fs::File::create(get_config_path()) {
+                let _ = file.write_all(toml_string.as_bytes());
+            }
+        }
+    }
+
+    config
+}
+
 pub fn get_config() -> Result<ConfigFields, ConfigError> {
     let config_path = get_config_path();
 
@@ -183,10 +216,11 @@ pub fn get_config() -> Result<ConfigFields, ConfigError> {
         file.write_all(toml_string.as_bytes()).unwrap();
     }
 
-    Config::builder()
+    let config = Config::builder()
         .add_source(File::with_name(&config_path.trim_end_matches(".toml")).required(true))
         .build()?
-        .try_deserialize()
+        .try_deserialize()?;
+    Ok(migrate_config(config))
 }
 
 pub fn write_oauth_config(fields: &OauthValues) -> Result<ConfigFields, ConfigError> {

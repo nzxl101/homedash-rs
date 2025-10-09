@@ -23,7 +23,7 @@ export function Proxmox() {
     const memoryPercentage = Math.round((memoryUsed / memoryTotal) * 100);
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full min-h-[200px] sm:col-span-1">
+        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full min-h-[200px] sm:col-span-1">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">Proxmox</CardTitle>
             </CardHeader>

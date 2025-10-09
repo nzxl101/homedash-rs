@@ -13,6 +13,7 @@ pub struct ApplicationState {
     pub username: String,
     pub weather_location_lat: f64,
     pub weather_location_long: f64,
+    pub background: Option<String>,
 }
 
 pub fn main() -> ApplicationState {
@@ -37,5 +38,6 @@ pub fn main() -> ApplicationState {
         username: config.clone().username,
         weather_location_lat: config.clone().weather_location[0],
         weather_location_long: config.clone().weather_location[1],
+        background: config.clone().background_url,
     };
 }

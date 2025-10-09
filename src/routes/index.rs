@@ -14,6 +14,7 @@ pub struct WeatherData {
 pub struct IndexData {
     username: String,
     weather: WeatherData,
+    background: Option<String>,
 }
 
 #[tuono_lib::handler]
@@ -27,6 +28,7 @@ async fn index_data(_req: Request) -> Response {
     let index_data = IndexData {
         username: config.clone().username,
         weather: weather_data,
+        background: config.clone().background_url,
     };
 
     Response::Props(Props::new(index_data))

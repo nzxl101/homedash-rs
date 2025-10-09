@@ -24,7 +24,7 @@ interface App {
 
 const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boolean; isLocked: boolean }) => (
     <div className={`flex flex-col items-center ${isDragging ? "opacity-50" : ""} select-none`} onClick={isLocked ? () => window.open(`${!app.name.match(/Plex/gi) ? app.url : `${app.url}/web`}`, "_blank") : () => false} style={{ cursor: isLocked ? "pointer" : "grab" }}>
-        <div className="w-16 h-16 rounded-md bg-zinc-800 flex items-center justify-center text-2xl font-medium mb-2 border border-zinc-700 relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
+        <div className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg w-16 h-16 rounded-md bg-zinc-800 flex items-center justify-center text-2xl font-medium mb-2 border border-zinc-700 relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
             <img className={"drop-shadow"} src={getIconURL(app.name)} width={42} height={42} alt={app.name} />
             <div className={`animate-pulse absolute bottom-1 right-1 w-2 h-2 rounded-full ${[200, 401].includes(app.status) ? "bg-emerald-400" : "bg-red-400"} ring-2 ring-zinc-800`}></div>
         </div>
@@ -33,7 +33,7 @@ const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boo
 ));
 AppIcon.displayName = "AppIcon";
 
-export default function Dashboard({ username, weather }: { username: string | undefined; weather: { lat: number; long: number } | undefined }) {
+export default function Dashboard({ username, weather, background }: { username: string | undefined; weather: { lat: number; long: number } | undefined; background: string | null | undefined }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ["metrics-data"],
         queryFn: async () => {
@@ -233,7 +233,8 @@ export default function Dashboard({ username, weather }: { username: string | un
     if (isInitialized) {
         return (
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-                <div className="min-h-screen bg-black text-white p-6 font-sans select-none">
+                <div className="fixed top-0 left-0 w-full h-full bg-cover bg-center z-0 blur-[8px] brightness-50" style={{ backgroundImage: background ? `url(${background})` : "none" }}></div>
+                <div className="min-h-screen text-zinc-100 p-6 font-sans select-none z-10 relative">
                     <header className="mb-12 flex justify-between items-start">
                         <h1 className="text-4xl font-bold tracking-tight">
                             Good {getTimeOfDay()}, {username ?? "user"}.
@@ -241,15 +242,15 @@ export default function Dashboard({ username, weather }: { username: string | un
                         <UnduckSearchBar />
                         <div className="flex items-center space-x-4">
                             <WeatherWidget lat={weather?.lat ?? 0} long={weather?.long ?? 0} />
-                            <button onClick={() => setIsLocked(!isLocked)} className="text-zinc-400 hover:text-white transition-colors duration-200">
+                            <button onClick={() => setIsLocked(!isLocked)} className="text-zinc-400 hover:text-zinc-100 transition-colors duration-200">
                                 {isLocked ? <Lock className="h-6 w-6" /> : <Unlock className="h-6 w-6" />}
                             </button>
                         </div>
                     </header>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        <Card className="bg-zinc-900 border-zinc-800 backdrop-filter backdrop-blur-sm">
+                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg font-medium text-white">CPU Usage</CardTitle>
+                                <CardTitle className="text-lg font-medium text-zinc-100">CPU Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">Current: {`${cpuUsage}`}%</CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -264,9 +265,9 @@ export default function Dashboard({ username, weather }: { username: string | un
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-zinc-900 border-zinc-800 backdrop-filter backdrop-blur-sm">
+                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg font-medium text-white">Memory Usage</CardTitle>
+                                <CardTitle className="text-lg font-medium text-zinc-100">Memory Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">
                                     {memUsage} GB / {memTotal} GB
                                 </CardDescription>
@@ -283,9 +284,9 @@ export default function Dashboard({ username, weather }: { username: string | un
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-zinc-900 border-zinc-800 backdrop-filter backdrop-blur-sm">
+                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
-                                <CardTitle className="text-lg font-medium text-white">Storage Usage</CardTitle>
+                                <CardTitle className="text-lg font-medium text-zinc-100">Storage Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">
                                     {storageUsage} / {storageTotal}
                                 </CardDescription>
@@ -335,15 +336,15 @@ export default function Dashboard({ username, weather }: { username: string | un
                     </div>
                     <div className="flex justify-center items-center mt-6 mb-12">
                         {Array.from({ length: totalPages }, (_, i) => (
-                            <Button key={i} onClick={() => setCurrentPage(i + 1)} className={`mx-1 w-2 h-2 rounded-full p-0 ${currentPage === i + 1 ? "bg-white" : "bg-zinc-600"}`} />
+                            <Button key={i} onClick={() => setCurrentPage(i + 1)} className={`mx-1 w-2 h-2 rounded-full p-0 cursor-pointer hover:bg-zinc-300 ${currentPage === i + 1 ? "bg-white" : "bg-zinc-600"}`} />
                         ))}
                     </div>
                     <div className="mt-8 mb-8">
-                        <Input placeholder="Search apps.." value={search} onChange={(e) => setSearch(e.target.value)} className="bg-zinc-900 text-[#aaa] border-zinc-700 rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-zinc-600 focus:border-zinc-600 transition-all duration-200" />
+                        <Input placeholder="Search apps.." value={search} onChange={(e) => setSearch(e.target.value)} className="backdrop-blur bg-zinc-900/60 border border-white/10 text-zinc-300 rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:border-white/5 focus:ring-0 transition-all duration-200" />
                     </div>
-                    <Card className="bg-zinc-900 border-zinc-800 backdrop-filter backdrop-blur-sm">
+                    <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-lg font-medium text-white">Favorites</CardTitle>
+                            <CardTitle className="text-lg font-medium text-zinc-200">Favorites</CardTitle>
                         </CardHeader>
                         <CardContent className="scale-75 md:scale-100">
                             <Droppable droppableId="favorites" direction="horizontal" isDropDisabled={isLocked}>

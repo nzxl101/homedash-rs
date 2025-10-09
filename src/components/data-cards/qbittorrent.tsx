@@ -23,7 +23,7 @@ export function QBittorrent() {
 
     if (isLoading || error) {
         return (
-            <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-3">
+            <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-3">
                 <CardHeader>
                     <CardTitle className="text-lg font-medium text-white">qBittorrent</CardTitle>
                 </CardHeader>
@@ -35,7 +35,7 @@ export function QBittorrent() {
     }
 
     return (
-        <Card className="bg-zinc-900 border-zinc-800 h-full sm:col-span-3">
+        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-3">
             <CardHeader>
                 <CardTitle className="text-lg font-medium text-white">qBittorrent</CardTitle>
             </CardHeader>
