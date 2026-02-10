@@ -1,3 +1,32 @@
+# Multi-stage build for cross-platform compilation
+FROM rust:1-slim as builder
+
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js and pnpm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g pnpm
+
+WORKDIR /app
+
+# Copy source files
+COPY . .
+
+# Install frontend dependencies and build
+RUN pnpm install --frozen-lockfile && \
+    TUONO_VERSION=$(jq -r '.dependencies.tuono' package.json) && \
+    cargo install tuono@${TUONO_VERSION} && \
+    tuono build && \
+    cargo build --release
+
+# Final runtime image
 FROM ghcr.io/linuxserver/baseimage-ubuntu:jammy
 
 # Image version
@@ -23,16 +52,16 @@ RUN apt-get update && \
 HEALTHCHECK --interval=60s --timeout=30s --start-period=180s --retries=5 \
     CMD curl -f http://localhost:3000/api/health_check > /dev/null || exit 1
 
-# Copy the pre-built Rust binary from the local filesystem
-COPY ./target/x86_64-unknown-linux-gnu/release/tuono /app/tuono
+# Copy the built Rust binary from builder stage
+COPY --from=builder /app/target/release/tuono /app/tuono
 RUN chmod +x /app/tuono && \
     chown abc:abc /app/tuono && \
     chmod 755 /app && \
     chown -R abc:abc /app
 
 # Copy server files
-COPY ./.tuono/ /app/.tuono/
-COPY ./out/ /app/out/
+COPY --from=builder /app/.tuono/ /app/.tuono/
+COPY --from=builder /app/out/ /app/out/
 RUN chown -R abc:abc /app/.tuono /app/out && \
     chmod -R 755 /app/.tuono /app/out
 
