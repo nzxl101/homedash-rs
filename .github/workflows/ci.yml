@@ -2,7 +2,11 @@ on:
     push:
         branches:
             - main
-name: Continuous Integration (tuono+rust)
+    pull_request:
+        branches:
+            - main
+
+name: Build Docker Image
 
 jobs:
     build:
