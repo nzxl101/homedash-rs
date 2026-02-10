@@ -7,8 +7,9 @@ RUN apt-get update && \
     pkg-config \
     libssl-dev \
     build-essential \
-    curl && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | sh - && \
+    jq \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | sh - && \
     apt-get install -y nodejs && \
     npm install -g pnpm \
     && rm -rf /var/lib/apt/lists/*
