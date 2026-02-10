@@ -59,59 +59,20 @@ jobs:
                       ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:latest', github.repository) || '' }}
                       ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:{1}', github.repository, env.VERSION) || '' }}
                       ${{ github.event_name == 'pull_request' && format('ghcr.io/{0}:pr-{1}', github.repository, github.event.number) || '' }}
-                  outputs: |
-                      type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
-
-            - name: Extract image metadata
-              id: meta
-              if: github.event_name != 'pull_request'
-              run: |
-                  IMAGE_DIGEST=$(jq -r '.manifests[0].digest' <<< "${{ steps.build.outputs.metadata }}")
-                  echo "digest=$IMAGE_DIGEST" >> $GITHUB_OUTPUT
-
-                  # Pull the image to extract labels
-                  docker pull ghcr.io/${{ github.repository }}@$IMAGE_DIGEST
-
-                  # Extract version label from the image
-                  VERSION_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.version"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
-                  COMMIT_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.revision"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
-                  BUILD_TIME_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.created"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
-
-                  echo "version=$VERSION_LABEL" >> $GITHUB_OUTPUT
-                  echo "commit=$COMMIT_LABEL" >> $GITHUB_OUTPUT
-                  echo "build_time=$BUILD_TIME_LABEL" >> $GITHUB_OUTPUT
-
-            - name: Create additional tags with extracted labels
-              if: github.event_name != 'pull_request'
-              run: |
-                  # Tag with commit SHA
-                  docker tag ghcr.io/${{ github.repository }}@${{ steps.meta.outputs.digest }} ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}
-                  docker push ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}
-
-                  # Create a short build time tag (YYYY-MM-DD)
-                  SHORT_DATE=$(date -d '${{ steps.meta.outputs.build_time }}' +'%Y-%m-%d' 2>/dev/null || echo '${{ steps.meta.outputs.build_time }}' | cut -d'_' -f1)
-                  docker tag ghcr.io/${{ github.repository }}@${{ steps.meta.outputs.digest }} ghcr.io/${{ github.repository }}:$SHORT_DATE
-                  docker push ghcr.io/${{ github.repository }}:$SHORT_DATE
 
             - name: Create GitHub Release
               if: github.event_name == 'push' && github.ref == 'refs/heads/main'
               uses: softprops/action-gh-release@v1
               with:
-                  tag_name: ${{ steps.meta.outputs.version }}
-                  name: Release ${{ steps.meta.outputs.version }}
+                  tag_name: ${{ env.VERSION }}
+                  name: Release ${{ env.VERSION }}
                   body: |
-                      Automated release ${{ steps.meta.outputs.version }}
+                      Automated release ${{ env.VERSION }}
 
                       **Build Info:**
-                      - Commit: `${{ steps.meta.outputs.commit }}`
-                      - Built: ${{ steps.meta.outputs.build_time }}
-                      - Image Digest: `${{ steps.meta.outputs.digest }}`
-
-                      **Docker Tags:**
-                      - `ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}` (version tag)
-                      - `ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}` (commit tag)
-                      - `ghcr.io/${{ github.repository }}:latest` (latest)
-                      - Date tag (for daily identification)
+                      - Commit: ${{ env.COMMIT_SHA }}
+                      - Built: ${{ env.BUILD_TIME }}
+                      - Docker: `ghcr.io/${{ github.repository }}:${{ env.VERSION }}`
 
                       **Platforms:**
                       - linux/amd64

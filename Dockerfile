@@ -1,5 +1,5 @@
 # Multi-stage build for cross-platform compilation
-FROM rust:1-slim as builder
+FROM rust:1-slim AS builder
 
 # Install build dependencies
 RUN apt-get update && \
@@ -7,14 +7,13 @@ RUN apt-get update && \
     pkg-config \
     libssl-dev \
     build-essential \
+    curl && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sh - && \
+    apt-get install -y nodejs && \
+    npm install -g pnpm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js and pnpm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sh - && \
-    apt-get update && \
-    apt-get install -y nodejs && \
-    npm install -g pnpm
-
+# Base directory
 WORKDIR /app
 
 # Copy source files
@@ -34,20 +33,9 @@ FROM ghcr.io/linuxserver/baseimage-ubuntu:jammy
 ARG COMMIT_SHA=unknown
 ARG BUILD_TIME=unknown
 ARG VERSION=unknown
-LABEL org.opencontainers.image.version=${VERSION}
-LABEL org.opencontainers.image.revision=${COMMIT_SHA}
-LABEL org.opencontainers.image.created=${BUILD_TIME}
-LABEL org.opencontainers.image.source="https://github.com/nzxl101/homedash-rs"
 
 # Base directory
 WORKDIR /app
-
-# Install required packages
-RUN apt-get update && \
-    apt-get install -y \
-    ca-certificates \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
 
 # Built-in healthcheck
 HEALTHCHECK --interval=60s --timeout=30s --start-period=180s --retries=5 \
