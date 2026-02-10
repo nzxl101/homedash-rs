@@ -44,7 +44,6 @@ jobs:
             - name: Build rust app
               run: |
                   sed -i 's/# openssl/openssl/' Cargo.toml
-                  sed -i 's/\/\/ \(.*\)/\1/' tuono.config.ts
                   TUONO_VERSION=$(jq -r '.dependencies.tuono' package.json)
                   cargo install tuono@${TUONO_VERSION}
                   chmod +x build.sh

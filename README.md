@@ -83,4 +83,4 @@ pnpm dev
 
 MIT License
 
-Copyright (c) 2025 nzxl.space
+Copyright (c) 2026 nzxl101

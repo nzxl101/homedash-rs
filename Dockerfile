@@ -41,6 +41,9 @@ RUN mkdir -p /app/data && \
     chown abc:abc /app/data && \
     chmod 755 /app/data
 
+# Copy branding
+COPY ./branding /etc/s6-overlay/s6-rc.d/init-adduser/branding
+
 EXPOSE 3000
 
 CMD ["./tuono"]

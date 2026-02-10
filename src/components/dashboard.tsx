@@ -24,7 +24,7 @@ interface App {
 
 const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boolean; isLocked: boolean }) => (
     <div className={`flex flex-col items-center ${isDragging ? "opacity-50" : ""} select-none`} onClick={isLocked ? () => window.open(`${!app.name.match(/Plex/gi) ? app.url : `${app.url}/web`}`, "_blank") : () => false} style={{ cursor: isLocked ? "pointer" : "grab" }}>
-        <div className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg w-16 h-16 rounded-md bg-zinc-800 flex items-center justify-center text-2xl font-medium mb-2 border border-zinc-700 relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
+        <div className="bg-zinc-900/60 border border-white/10 shadow-lg w-16 h-16 rounded-md flex items-center justify-center text-2xl font-medium mb-2  relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
             <img className={"drop-shadow"} src={getIconURL(app.name)} width={42} height={42} alt={app.name} />
             <div className={`animate-pulse absolute bottom-1 right-1 w-2 h-2 rounded-full ${[200, 401].includes(app.status) ? "bg-emerald-400" : "bg-red-400"} ring-2 ring-zinc-800`}></div>
         </div>
@@ -37,6 +37,8 @@ export default function Dashboard({ username, weather, background }: { username:
     const { data, isLoading, error } = useQuery({
         queryKey: ["metrics-data"],
         queryFn: async () => {
+            if (!isLocked) return;
+
             const [metrics, apps] = await Promise.all([fetch("/api/metrics").then((res) => res.json()), fetch("/api/ping").then((res) => res.json())]);
             return {
                 metrics,
@@ -248,7 +250,7 @@ export default function Dashboard({ username, weather, background }: { username:
                         </div>
                     </header>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
+                        <Card className="bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-lg font-medium text-zinc-100">CPU Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">Current: {`${cpuUsage}`}%</CardDescription>
@@ -265,7 +267,7 @@ export default function Dashboard({ username, weather, background }: { username:
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
+                        <Card className="bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-lg font-medium text-zinc-100">Memory Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">
@@ -284,7 +286,7 @@ export default function Dashboard({ username, weather, background }: { username:
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
+                        <Card className="bg-zinc-900/60 border border-white/10 shadow-lg">
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-lg font-medium text-zinc-100">Storage Usage</CardTitle>
                                 <CardDescription className="text-zinc-300">
@@ -342,11 +344,11 @@ export default function Dashboard({ username, weather, background }: { username:
                     <div className="mt-8 mb-8">
                         <Input placeholder="Search apps.." value={search} onChange={(e) => setSearch(e.target.value)} className="backdrop-blur bg-zinc-900/60 border border-white/10 text-zinc-300 rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:border-white/5 focus:ring-0 transition-all duration-200" />
                     </div>
-                    <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg">
+                    <Card className="bg-zinc-900/60 border border-white/10 shadow-lg">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-lg font-medium text-zinc-200">Favorites</CardTitle>
                         </CardHeader>
-                        <CardContent className="scale-75 md:scale-100">
+                        <CardContent>
                             <Droppable droppableId="favorites" direction="horizontal" isDropDisabled={isLocked}>
                                 {(provided) => (
                                     <div {...provided.droppableProps} ref={provided.innerRef} className="w-full max-w-[440px] mx-auto flex items-center justify-center">
