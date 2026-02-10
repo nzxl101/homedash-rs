@@ -2,6 +2,8 @@ on:
     push:
         branches:
             - main
+        tags:
+            - "v*"
     pull_request:
         branches:
             - main
@@ -22,40 +24,12 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Set up pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 10
-                  run_install: false
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-            - name: Set up node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-
-            - name: Install pnpm dependencies
-              run: pnpm install --no-frozen-lockfile
-
-            - name: Setup Rust toolchain
-              uses: dtolnay/rust-toolchain@stable
-
-            - name: Install system dependencies
-              run: |
-                  sudo apt update
-                  sudo apt -y install build-essential libssl-dev pkg-config jq lsof
-              shell: bash
-
-            - name: Build rust app
+            - name: Prepare source for Docker build
               run: |
                   sed -i 's/# openssl/openssl/' Cargo.toml
-                  TUONO_VERSION=$(jq -r '.dependencies.tuono' package.json)
-                  cargo install tuono@${TUONO_VERSION}
-                  chmod +x build.sh
-                  ./build.sh
-              shell: bash
-
-            - name: Set app version
-              run: |
                   DATE=$(date +'%y%m%d')
                   BUILD_NUM=$(git rev-list --count HEAD --since="midnight")
                   echo "VERSION=${DATE}-${BUILD_NUM}" >> $GITHUB_ENV
@@ -73,12 +47,76 @@ jobs:
               uses: docker/build-push-action@v4
               with:
                   context: .
-                  platforms: linux/amd64
-                  push: true
+                  platforms: linux/amd64,linux/arm64
+                  push: ${{ github.event_name != 'pull_request' }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
                   build-args: |
                       VERSION=${{ env.VERSION }}
                       COMMIT_SHA=${{ env.COMMIT_SHA }}
                       BUILD_TIME=${{ env.BUILD_TIME }}
                   tags: |
-                      ghcr.io/${{ github.repository }}:latest
-                      ghcr.io/${{ github.repository }}:${{ env.VERSION }}
+                      ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:latest', github.repository) || '' }}
+                      ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:{1}', github.repository, env.VERSION) || '' }}
+                      ${{ github.event_name == 'pull_request' && format('ghcr.io/{0}:pr-{1}', github.repository, github.event.number) || '' }}
+                  outputs: |
+                      type=image,name=ghcr.io/${{ github.repository }},push-by-digest=true,name-canonical=true,push=true
+
+            - name: Extract image metadata
+              id: meta
+              if: github.event_name != 'pull_request'
+              run: |
+                  IMAGE_DIGEST=$(jq -r '.manifests[0].digest' <<< "${{ steps.build.outputs.metadata }}")
+                  echo "digest=$IMAGE_DIGEST" >> $GITHUB_OUTPUT
+
+                  # Pull the image to extract labels
+                  docker pull ghcr.io/${{ github.repository }}@$IMAGE_DIGEST
+
+                  # Extract version label from the image
+                  VERSION_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.version"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
+                  COMMIT_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.revision"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
+                  BUILD_TIME_LABEL=$(docker inspect --format='{{index .Config.Labels "org.opencontainers.image.created"}}' ghcr.io/${{ github.repository }}@$IMAGE_DIGEST)
+
+                  echo "version=$VERSION_LABEL" >> $GITHUB_OUTPUT
+                  echo "commit=$COMMIT_LABEL" >> $GITHUB_OUTPUT
+                  echo "build_time=$BUILD_TIME_LABEL" >> $GITHUB_OUTPUT
+
+            - name: Create additional tags with extracted labels
+              if: github.event_name != 'pull_request'
+              run: |
+                  # Tag with commit SHA
+                  docker tag ghcr.io/${{ github.repository }}@${{ steps.meta.outputs.digest }} ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}
+                  docker push ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}
+
+                  # Create a short build time tag (YYYY-MM-DD)
+                  SHORT_DATE=$(date -d '${{ steps.meta.outputs.build_time }}' +'%Y-%m-%d' 2>/dev/null || echo '${{ steps.meta.outputs.build_time }}' | cut -d'_' -f1)
+                  docker tag ghcr.io/${{ github.repository }}@${{ steps.meta.outputs.digest }} ghcr.io/${{ github.repository }}:$SHORT_DATE
+                  docker push ghcr.io/${{ github.repository }}:$SHORT_DATE
+
+            - name: Create GitHub Release
+              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: ${{ steps.meta.outputs.version }}
+                  name: Release ${{ steps.meta.outputs.version }}
+                  body: |
+                      Automated release ${{ steps.meta.outputs.version }}
+
+                      **Build Info:**
+                      - Commit: `${{ steps.meta.outputs.commit }}`
+                      - Built: ${{ steps.meta.outputs.build_time }}
+                      - Image Digest: `${{ steps.meta.outputs.digest }}`
+
+                      **Docker Tags:**
+                      - `ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.version }}` (version tag)
+                      - `ghcr.io/${{ github.repository }}:${{ steps.meta.outputs.commit }}` (commit tag)
+                      - `ghcr.io/${{ github.repository }}:latest` (latest)
+                      - Date tag (for daily identification)
+
+                      **Platforms:**
+                      - linux/amd64
+                      - linux/arm64
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
