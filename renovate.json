@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", "docker:enableMajor", "docker:pinDigests", "default:automergeDigest", "github:allowIdentifyActionArgs"],
+    "extends": ["config:recommended", "docker:enableMajor", "docker:pinDigests", "default:automergeDigest"],
     "packageRules": [
         {
             "matchManagers": ["cargo", "npm", "dockerfile", "github-actions"],
