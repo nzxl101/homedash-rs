@@ -60,23 +60,23 @@ jobs:
                       ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:{1}', github.repository, env.VERSION) || '' }}
                       ${{ github.event_name == 'pull_request' && format('ghcr.io/{0}:pr-{1}', github.repository, github.event.number) || '' }}
 
-            - name: Create GitHub Release
-              if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-              uses: softprops/action-gh-release@v1
-              with:
-                  tag_name: ${{ env.VERSION }}
-                  name: Release ${{ env.VERSION }}
-                  body: |
-                      Automated release ${{ env.VERSION }}
+            # - name: Create GitHub Release
+            #   if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+            #   uses: softprops/action-gh-release@v1
+            #   with:
+            #       tag_name: ${{ env.VERSION }}
+            #       name: Release ${{ env.VERSION }}
+            #       body: |
+            #           Automated release ${{ env.VERSION }}
 
-                      **Build Info:**
-                      - Commit: ${{ env.COMMIT_SHA }}
-                      - Built: ${{ env.BUILD_TIME }}
-                      - Docker: `ghcr.io/${{ github.repository }}:${{ env.VERSION }}`
+            #           **Build Info:**
+            #           - Commit: ${{ env.COMMIT_SHA }}
+            #           - Built: ${{ env.BUILD_TIME }}
+            #           - Docker: `ghcr.io/${{ github.repository }}:${{ env.VERSION }}`
 
-                      **Platforms:**
-                      - linux/amd64
-                  draft: false
-                  prerelease: false
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            #           **Platforms:**
+            #           - linux/amd64
+            #       draft: false
+            #       prerelease: false
+            #   env:
+            #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
