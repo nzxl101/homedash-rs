@@ -47,7 +47,7 @@ jobs:
               uses: docker/build-push-action@v4
               with:
                   context: .
-                  platforms: linux/amd64,linux/arm64
+                  platforms: linux/amd64
                   push: ${{ github.event_name != 'pull_request' }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
@@ -76,7 +76,6 @@ jobs:
 
                       **Platforms:**
                       - linux/amd64
-                      - linux/arm64
                   draft: false
                   prerelease: false
               env:
