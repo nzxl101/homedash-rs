@@ -13,13 +13,13 @@ use rusqlite::Connection;
 use crate::config::ConfigFields;
 
 pub fn ping_all_urls(config: &ConfigFields, conn: &Connection) -> Result<(), Box<dyn Error>> {
-    let current_time = SystemTime::now()
+    let current_time: i64 = SystemTime::now()
         .duration_since(time::UNIX_EPOCH)
         .unwrap()
-        .as_secs();
+        .as_secs() as i64;
 
     // Check if last ping was within 5 minutes
-    let last_check: u64 = conn
+    let last_check: i64 = conn
         .query_row("SELECT MAX(last_check) FROM services", [], |row| row.get(0))
         .unwrap_or(0);
 
@@ -29,7 +29,7 @@ pub fn ping_all_urls(config: &ConfigFields, conn: &Connection) -> Result<(), Box
         return Ok(());
     }
 
-    let last_check = current_time;
+    let last_check: i64 = current_time;
     let results = Arc::new(Mutex::new(Vec::new()));
     let mut urls = vec![];
 
