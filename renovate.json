@@ -3,6 +3,14 @@
     "extends": ["config:recommended", "docker:enableMajor", "docker:pinDigests", "default:automergeDigest"],
     "packageRules": [
         {
+            "matchPackageNames": ["tuono_lib"],
+            "allowedVersions": "0.19.7"
+        },
+        {
+            "matchPackageNames": ["reqwest"],
+            "allowedVersions": "0.12.14"
+        },
+        {
             "matchManagers": ["cargo", "npm", "dockerfile", "github-actions"],
             "groupName": "monolith-dependencies",
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
