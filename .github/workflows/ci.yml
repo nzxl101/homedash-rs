@@ -61,6 +61,7 @@ jobs:
                       COMMIT_SHA=${{ env.COMMIT_SHA }}
                       BUILD_TIME=${{ env.BUILD_TIME }}
                   tags: |
+                      ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:latest', github.repository) || '' }}
                       ${{ github.event_name != 'pull_request' && format('ghcr.io/{0}:{1}', github.repository, env.VERSION) || '' }}
                   labels: ${{ steps.meta.outputs.labels }}
 

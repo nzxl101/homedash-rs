@@ -16,7 +16,6 @@
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
             "automerge": true,
             "platformAutomerge": true,
-            "minimumReleaseAge": "3 days",
             "labels": ["renovate", "automerge", "dependencies"]
         }
     ],
