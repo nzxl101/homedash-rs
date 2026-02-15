@@ -1,5 +1,5 @@
 # Multi-stage build for cross-platform compilation
-FROM rust:slim-trixie@sha256:3a160f8a47679176e99c8597993f9ea8f7a265333e648e37697395b45f94b2c3 AS builder
+FROM rust:slim-trixie@sha256:9663b80a1621253d30b146454f903de48f0af925c967be48c84745537cd35d8b AS builder
 
 # Install build dependencies
 RUN apt-get update && \
