@@ -14,13 +14,13 @@
             "matchManagers": ["cargo", "npm", "dockerfile", "github-actions"],
             "groupName": "monolith-dependencies",
             "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "automerge": true,
-            "platformAutomerge": true,
+            "automerge": false,
+            "platformAutomerge": false,
             "labels": ["renovate", "automerge", "dependencies"]
         }
     ],
     "lockFileMaintenance": {
-        "enabled": true,
-        "automerge": true
+        "enabled": false,
+        "automerge": false
     }
 }
