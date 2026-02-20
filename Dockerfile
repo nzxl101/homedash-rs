@@ -28,7 +28,7 @@ RUN pnpm install --frozen-lockfile && \
     cargo build --release
 
 # Final runtime image
-FROM ghcr.io/linuxserver/baseimage-debian:trixie@sha256:1201dada48964dd1dcd12145c4c2005e15af3d588254284404f4370e6dfcdb46
+FROM ghcr.io/linuxserver/baseimage-debian:trixie@sha256:3825df75688958f3710b2544283aab9f03fe3fc726a5de1f86f8d7c65f0e9fd8
 
 # Image version
 ARG COMMIT_SHA=unknown
