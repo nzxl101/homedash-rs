@@ -235,7 +235,7 @@ export default function Dashboard({ username, weather, background }: { username:
     if (isInitialized) {
         return (
             <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
-                <div className="fixed top-0 left-0 w-full h-full bg-cover bg-center z-0 blur-[8px] brightness-50" style={{ backgroundImage: background ? `url(${background})` : "none" }}></div>
+                <div className="fixed top-0 left-0 w-full h-full bg-cover bg-center z-0 blur-sm brightness-50" style={{ backgroundImage: background ? `url(${background})` : "none" }}></div>
                 <div className="min-h-screen text-zinc-100 p-6 font-sans select-none z-10 relative">
                     <header className="mb-12 flex justify-between items-start">
                         <h1 className="text-4xl font-bold tracking-tight">
@@ -307,7 +307,7 @@ export default function Dashboard({ username, weather, background }: { username:
                         </Card>
                     </div>
                     <div {...handlers} className="overflow-hidden">
-                        <div className="overflow-hidden max-h-[calc(100vh-500px)] min-h-[350px] lg:min-h-[234px] xl:min-h-[234px] pt-[2px]">
+                        <div className="overflow-hidden max-h-[calc(100vh-500px)] min-h-87.5 lg:min-h-58.5 xl:min-h-58.5 pt-0.5">
                             {getRows().map((rowIndex) => (
                                 <Droppable key={`row-${rowIndex}`} droppableId={`row-${rowIndex}`} direction="horizontal" isDropDisabled={isLocked}>
                                     {(provided, snapshot) => (
@@ -351,8 +351,8 @@ export default function Dashboard({ username, weather, background }: { username:
                         <CardContent>
                             <Droppable droppableId="favorites" direction="horizontal" isDropDisabled={isLocked}>
                                 {(provided) => (
-                                    <div {...provided.droppableProps} ref={provided.innerRef} className="w-full max-w-[440px] mx-auto flex items-center justify-center">
-                                        <div className="flex items-center justify-center gap-6">
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="w-full max-w-110 mx-auto flex items-center justify-center">
+                                        <div className="flex items-center justify-center md:gap-6 gap-1">
                                             {favorites.map((app, index) => (
                                                 <Draggable key={app.id} draggableId={app.id.toString()} index={index} isDragDisabled={isLocked}>
                                                     {(provided, snapshot) => (

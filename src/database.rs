@@ -63,13 +63,12 @@ pub fn create_schemas(conn: &Connection) -> Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS services (
               id          INTEGER PRIMARY KEY,
-              name        TEXT NOT NULL,
+              name        TEXT NOT NULL UNIQUE,
               status      INTEGER DEFAULT 0,
               last_check  INTEGER DEFAULT 0,
               expires     INTEGER DEFAULT 180,
               url         TEXT NOT NULL,
-              json_data   TEXT,
-              UNIQUE(name, url)
+              json_data   TEXT
            )",
         (),
     )?;
@@ -159,76 +158,76 @@ pub fn create_schemas(conn: &Connection) -> Result<()> {
 }
 
 pub fn populate_tables(conn: &Connection, config: &ConfigFields) -> Result<()> {
-    let mut insert = conn.prepare("INSERT OR IGNORE INTO services (name, url) VALUES (?1, ?2)")?;
+    let mut upsert = conn.prepare("INSERT INTO services (name, url) VALUES (?1, ?2) ON CONFLICT(name) DO UPDATE SET url = excluded.url")?;
     let mut delete = conn.prepare("DELETE FROM services WHERE name = ?1")?;
 
     // Handle built-in services
     if config.sonarr.enabled {
-        insert.execute(params![String::from("Sonarr"), config.sonarr.url])?;
+        upsert.execute(params![String::from("Sonarr"), config.sonarr.url])?;
     } else {
         delete.execute(params![String::from("Sonarr")])?;
     }
 
     if config.radarr.enabled {
-        insert.execute(params![String::from("Radarr"), config.radarr.url])?;
+        upsert.execute(params![String::from("Radarr"), config.radarr.url])?;
     } else {
         delete.execute(params![String::from("Radarr")])?;
     }
 
     if config.prowlarr.enabled {
-        insert.execute(params![String::from("Prowlarr"), config.prowlarr.url])?;
+        upsert.execute(params![String::from("Prowlarr"), config.prowlarr.url])?;
     } else {
         delete.execute(params![String::from("Prowlarr")])?;
     }
 
     if config.overseerr.enabled {
-        insert.execute(params![String::from("Overseerr"), config.overseerr.url])?;
+        upsert.execute(params![String::from("Overseerr"), config.overseerr.url])?;
     } else {
         delete.execute(params![String::from("Overseerr")])?;
     }
 
     if config.qbittorrent.enabled {
-        insert.execute(params![String::from("qBittorrent"), config.qbittorrent.url])?;
+        upsert.execute(params![String::from("qBittorrent"), config.qbittorrent.url])?;
     } else {
         delete.execute(params![String::from("qBittorrent")])?;
     }
 
     if config.plex.enabled {
-        insert.execute(params![String::from("Plex"), config.plex.url])?;
+        upsert.execute(params![String::from("Plex"), config.plex.url])?;
     } else {
         delete.execute(params![String::from("Plex")])?;
     }
 
     if config.tautulli.enabled {
-        insert.execute(params![String::from("Tautulli"), config.tautulli.url])?;
+        upsert.execute(params![String::from("Tautulli"), config.tautulli.url])?;
     } else {
         delete.execute(params![String::from("Tautulli")])?;
     }
 
     if config.proxmox.enabled {
-        insert.execute(params![String::from("Proxmox"), config.proxmox.url])?;
+        upsert.execute(params![String::from("Proxmox"), config.proxmox.url])?;
     } else {
         delete.execute(params![String::from("Proxmox")])?;
     }
 
     if config.adguard.enabled {
-        insert.execute(params![String::from("AdGuard"), config.adguard.url])?;
+        upsert.execute(params![String::from("AdGuard"), config.adguard.url])?;
     } else {
         delete.execute(params![String::from("AdGuard")])?;
     }
 
     if config.dockwatch.enabled {
-        insert.execute(params![String::from("Dockwatch"), config.dockwatch.url])?;
+        upsert.execute(params![String::from("Dockwatch"), config.dockwatch.url])?;
     } else {
         delete.execute(params![String::from("Dockwatch")])?;
     }
 
     // For HTTP URLs, first collect all configured URLs
-    let mut config_urls = Vec::new();
+    let mut config_http_names = Vec::new();
     if config.http.enabled {
         for url in &config.http.urls {
-            config_urls.push((String::from(&url.name), String::from(&url.url)));
-            insert.execute(params![url.name, url.url])?;
+            upsert.execute(params![url.name, url.url])?;
+            config_http_names.push(String::from(&url.name));
         }
     }
 
@@ -245,7 +244,7 @@ pub fn populate_tables(conn: &Connection, config: &ConfigFields) -> Result<()> {
 
     for row in rows {
         let (name, url) = row?;
-        if !config_urls.contains(&(name.clone(), url.clone())) {
+        if !config_http_names.contains(&name) {
             delete.execute(params![name])?;
         }
     }
