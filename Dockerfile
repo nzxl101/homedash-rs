@@ -1,5 +1,5 @@
 # Multi-stage build for cross-platform compilation
-FROM rust:slim-trixie@sha256:da9dab7a6b8dd428e71718402e97207bb3e54167d37b5708616050b1e8f60ed6 AS builder
+FROM rust:slim-trixie@sha256:f7bf1c266d9e48c8d724733fd97ba60464c44b743eb4f46f935577d3242d81d0 AS builder
 
 # Install build dependencies
 RUN apt-get update && \
@@ -28,7 +28,7 @@ RUN pnpm install --frozen-lockfile && \
     cargo build --release
 
 # Final runtime image
-FROM ghcr.io/linuxserver/baseimage-debian:trixie@sha256:3825df75688958f3710b2544283aab9f03fe3fc726a5de1f86f8d7c65f0e9fd8
+FROM ghcr.io/linuxserver/baseimage-debian:trixie@sha256:2a4e23bd3c4e652c22d354d450bdd1a95892e51a47317796c8251c1a75f54aff
 
 # Image version
 ARG COMMIT_SHA=unknown
