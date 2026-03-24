@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", "docker:enableMajor", "docker:pinDigests", "default:automergeDigest"],
+    "extends": ["config:recommended", "docker:pinDigests", "group:allNonMajor", "group:allDigest"],
     "packageRules": [
         {
             "matchPackageNames": ["tuono_lib"],
@@ -11,16 +11,8 @@
             "allowedVersions": "0.12.14"
         },
         {
-            "matchManagers": ["cargo", "npm", "dockerfile", "github-actions"],
-            "groupName": "monolith-dependencies",
-            "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-            "automerge": false,
-            "platformAutomerge": false,
-            "labels": ["renovate", "automerge", "dependencies"]
+            "matchUpdateTypes": ["major"],
+            "minimumReleaseAge": "30 days"
         }
-    ],
-    "lockFileMaintenance": {
-        "enabled": false,
-        "automerge": false
-    }
+    ]
 }
