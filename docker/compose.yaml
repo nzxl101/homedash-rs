@@ -1,0 +1,12 @@
+services:
+    homedash-rs:
+        container_name: homedash-rs
+        network_mode: host
+        environment:
+            - PUID=1000 # Replace with your user ID
+            - PGID=1000 # Replace with your group ID
+            - TZ=Europe/Berlin # Replace with your timezone
+        volumes:
+            - ./data:/app/data # Replace with your data directory
+        restart: unless-stopped
+        image: ghcr.io/nzxl101/homedash-rs:latest
