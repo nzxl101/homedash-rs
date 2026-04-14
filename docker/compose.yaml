@@ -9,4 +9,4 @@ services:
         volumes:
             - ./data:/app/data # Replace with your data directory
         restart: unless-stopped
-        image: ghcr.io/nzxl101/homedash-rs:latest
+        image: ghcr.io/nzxl101/homedash-rs:latest@sha256:f6fc983fdc131fb1684c5d5cda63988f8b4e49a279964caefd2e4b96ea039d33
