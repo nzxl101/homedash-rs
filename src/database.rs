@@ -243,7 +243,7 @@ pub fn populate_tables(conn: &Connection, config: &ConfigFields) -> Result<()> {
     })?;
 
     for row in rows {
-        let (name, url) = row?;
+        let (name, _url) = row?;
         if !config_http_names.contains(&name) {
             delete.execute(params![name])?;
         }

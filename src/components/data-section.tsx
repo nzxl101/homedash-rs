@@ -8,6 +8,7 @@ import { Tautulli } from "./data-cards/tautulli";
 import { Proxmox } from "./data-cards/proxmox";
 import { AdGuard } from "./data-cards/adguard";
 import { QBittorrent } from "./data-cards/qbittorrent";
+import { Gluetun } from "./data-cards/gluetun";
 
 export function ExpandableDataSection() {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -26,6 +27,7 @@ export function ExpandableDataSection() {
                     <Starr />
                     <Tautulli />
                     <Overseerr />
+                    <Gluetun />
                     <QBittorrent />
                 </div>
             )}

@@ -1,5 +1,6 @@
 pub mod adguard;
 pub mod dockwatch;
+pub mod gluetun;
 pub mod overseerr;
 pub mod plex;
 pub mod prowlarr;

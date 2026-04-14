@@ -12,7 +12,7 @@ pub struct APIOauthConfig {
     pub expires_in: u64,
 }
 
-#[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Debug, Deserialize, Clone, Serialize, Default)]
 #[allow(unused)]
 pub struct APIKeyConfig {
     pub enabled: bool,
@@ -51,6 +51,7 @@ pub struct ConfigFields {
     pub base_url: String,
     pub username: String,
     pub weather_location: Vec<f64>,
+    #[serde(default)]
     pub background_url: Option<String>,
     pub tvdb: APIOauthConfig,
     pub tmdb: APIOauthConfig,
@@ -64,6 +65,8 @@ pub struct ConfigFields {
     pub proxmox: APICredsConfig,
     pub adguard: APICredsConfig,
     pub dockwatch: APIKeyConfig,
+    #[serde(default)]
+    pub gluetun: APIKeyConfig,
     pub http: HttpConfig,
 }
 
@@ -82,7 +85,7 @@ pub struct CookieValues {
     pub cookie: String,
 }
 
-const LATEST_CONFIG_VERSION: u8 = 2; // Update on config structure changes
+const LATEST_CONFIG_VERSION: u8 = 3; // Update on config structure changes
 
 fn get_config_path() -> String {
     let path = if std::path::Path::new("data").exists() {
@@ -169,6 +172,11 @@ fn create_default_config() -> ConfigFields {
             url: String::new(),
             api_key: String::new(),
         },
+        gluetun: APIKeyConfig {
+            enabled: false,
+            url: String::new(),
+            api_key: String::new(),
+        },
         http: HttpConfig {
             enabled: false,
             urls: Vec::new(),
@@ -186,6 +194,16 @@ pub fn migrate_config(mut config: ConfigFields) -> ConfigFields {
                     config.background_url = Some(String::from(""));
                 }
                 config.version = 2;
+                migrated = true;
+            }
+            2 => {
+                config.gluetun = APIKeyConfig {
+                    enabled: false,
+                    url: String::from(""),
+                    api_key: String::from(""),
+                };
+
+                config.version = 3;
                 migrated = true;
             }
             _ => {
