@@ -5,9 +5,6 @@
 Simple and straightforward dashboard for your homelab.  
 Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in mind.
 
-> [!IMPORTANT]  
-> This project is still under heavy development and is not ready for production use.
-
 ## Supported apps
 
 - [x] AdGuard Home
@@ -20,14 +17,16 @@ Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in m
 - [x] Radarr
 - [x] Sonarr
 - [x] Tautulli
+- [x] Gluetun
 - [x] TMDB
 - [x] TVDB
 - [x] HTTP Status
+- [x] Unduck
 
 **Limitations**
 
 - Data cards can not be moved or resized.
-- Grid layout is hardcoded and can not be changed.
+- App drawer grid is hardcoded and can not be changed.
 - **If you'd like to tackle any of these limitations, feel free to open a PR!**
 
 # Screenshots
