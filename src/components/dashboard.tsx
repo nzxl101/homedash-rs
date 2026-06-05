@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { useSwipeable } from "react-swipeable";
-import { Lock, Unlock, Plus } from "lucide-react";
+import { Lock, Unlock, Plus, LayoutGrid } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import Spinner from "@/components/loading-spinner";
 import { ExpandableDataSection } from "@/components/data-section";
@@ -22,15 +22,20 @@ interface App {
     is_favorite: boolean;
 }
 
-const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boolean; isLocked: boolean }) => (
-    <div className={`flex flex-col items-center ${isDragging ? "opacity-50" : ""} select-none`} onClick={isLocked ? () => window.open(`${!app.name.match(/Plex/gi) ? app.url : `${app.url}/web`}`, "_blank") : () => false} style={{ cursor: isLocked ? "pointer" : "grab" }}>
-        <div className="bg-zinc-900/60 border border-white/10 shadow-lg w-16 h-16 rounded-md flex items-center justify-center text-2xl font-medium mb-2  relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
-            <img className={"drop-shadow"} src={getIconURL(app.name)} width={42} height={42} alt={app.name} />
-            <div className={`animate-pulse absolute bottom-1 right-1 w-2 h-2 rounded-full ${[200, 401].includes(app.status) ? "bg-emerald-400" : "bg-red-400"} ring-2 ring-zinc-800`}></div>
+const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boolean; isLocked: boolean }) => {
+    const [imgError, setImgError] = useState(false);
+    const iconUrl = getIconURL(app.name);
+
+    return (
+        <div className={`flex flex-col items-center ${isDragging ? "opacity-50" : ""} select-none`} onClick={isLocked ? () => window.open(`${!app.name.match(/Plex/gi) ? app.url : `${app.url}/web`}`, "_blank") : () => false} style={{ cursor: isLocked ? "pointer" : "grab" }}>
+            <div className="bg-zinc-900/60 border border-white/10 shadow-lg w-16 h-16 rounded-md flex items-center justify-center text-2xl font-medium mb-2  relative transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:border-zinc-600">
+                {iconUrl && !imgError ? <img className={"drop-shadow"} src={iconUrl} width={42} height={42} alt={app.name} onError={() => setImgError(true)} /> : <LayoutGrid />}
+                <div className={`animate-pulse absolute bottom-1 right-1 w-2 h-2 rounded-full ${[200, 401].includes(app.status) ? "bg-emerald-400" : "bg-red-400"} ring-2 ring-zinc-800`}></div>
+            </div>
+            <span className="text-sm text-center font-medium text-zinc-200 hover:text-white transition-colors duration-300 w-full truncate">{app.name.length > 10 ? truncateString(app.name) : app.name}</span>
         </div>
-        <span className="text-sm text-center font-medium text-zinc-200 hover:text-white transition-colors duration-300 w-full truncate">{app.name.length > 10 ? truncateString(app.name) : app.name}</span>
-    </div>
-));
+    );
+});
 AppIcon.displayName = "AppIcon";
 
 export default function Dashboard({ username, weather, background }: { username: string | undefined; weather: { lat: number; long: number } | undefined; background: string | null | undefined }) {

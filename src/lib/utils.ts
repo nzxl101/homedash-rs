@@ -82,21 +82,19 @@ export const truncateString = (text: string): string => {
     return result;
 };
 
-export const getIconURL = (app: string): string => {
-    let cdn_url = "https://cdn.jsdelivr.net/gh/selfhst/icons/png";
+export const getIconURL = (app: string) => {
+    let cdn = "https://cdn.jsdelivr.net/gh/selfhst/icons/png";
 
     switch (app) {
-        case "Dockwatch":
-            return "https://raw.githubusercontent.com/Notifiarr/images/refs/heads/main/icons/dockwatch.png";
         case "AdGuard":
-            return `${cdn_url}/adguard-home.png`;
+            return `${cdn}/adguard-home.png`;
         case "JDownloader2":
-            return `${cdn_url}/jdownloader.png`;
+            return `${cdn}/jdownloader.png`;
         case "Pterodactyl":
-            return `${cdn_url}/pelican-panel.png`;
+            return `${cdn}/pelican-panel.png`;
     }
 
-    return `${cdn_url}/${app.toLowerCase().replace(" ", "-")}.png`;
+    return `${cdn}/${app.toLowerCase().replace(" ", "-")}.png`;
 };
 
 export const trimText = (text: string, maxLength: number): string => {
