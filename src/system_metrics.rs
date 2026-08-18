@@ -1,5 +1,5 @@
 use serde::Serialize;
-use std::io;
+use std::{collections::HashSet, io};
 use sysinfo::{Disks, System};
 use tuono_lib::Type;
 
@@ -68,8 +68,23 @@ fn calculate_memory_usage(sys: &System) -> (f64, f64) {
 fn calculate_storage_usage(disks: &Disks) -> (u64, u64) {
     let mut total: u64 = 0;
     let mut used: u64 = 0;
+    let mut mounts = HashSet::new();
 
     for disk in disks {
+        let fs = disk.file_system().to_string_lossy().to_lowercase();
+        if fs.contains("overlay")
+            || fs.contains("tmpfs")
+            || fs.contains("squashfs")
+            || fs == "proc"
+            || fs == "sysfs"
+        {
+            continue;
+        }
+        let mp = disk.mount_point().to_path_buf();
+        if !mounts.insert(mp) {
+            continue;
+        }
+
         total += disk.total_space();
         used += disk.total_space() - disk.available_space();
     }
