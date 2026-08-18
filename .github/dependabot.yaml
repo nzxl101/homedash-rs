@@ -1,0 +1,62 @@
+version: 2
+updates:
+    - package-ecosystem: "github-actions"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+          time: "06:00"
+          timezone: "Europe/Berlin"
+      groups:
+          github-actions:
+              patterns:
+                  - "*"
+      open-pull-requests-limit: 5
+
+    - package-ecosystem: "pip"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+          time: "06:00"
+          timezone: "Europe/Berlin"
+      groups:
+          python-dependencies:
+              patterns:
+                  - "*"
+      open-pull-requests-limit: 5
+
+    - package-ecosystem: "cargo"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+          time: "06:00"
+          timezone: "Europe/Berlin"
+      groups:
+          rust-dependencies:
+              patterns:
+                  - "*"
+      open-pull-requests-limit: 5
+
+    - package-ecosystem: "docker"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+          time: "06:00"
+          timezone: "Europe/Berlin"
+      open-pull-requests-limit: 3
+
+    - package-ecosystem: "npm"
+      directory: "/"
+      schedule:
+          interval: "weekly"
+          day: "monday"
+          time: "06:00"
+          timezone: "Europe/Berlin"
+      groups:
+          node-dependencies:
+              patterns:
+                  - "*"
+      open-pull-requests-limit: 3
