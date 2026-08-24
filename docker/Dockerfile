@@ -17,15 +17,23 @@ RUN apt-get update && \
 # Base directory
 WORKDIR /app
 
-# Copy source files
-COPY . .
+# Frontend dependencies (cached unless package.json or lockfile change)
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Install frontend dependencies and build
-RUN pnpm install --frozen-lockfile && \
-    TUONO_VERSION=$(jq -r '.dependencies.tuono' package.json) && \
-    cargo install tuono@${TUONO_VERSION} && \
-    tuono build && \
-    cargo build --release
+# Rust manifests + stub entrypoint (tuono regenerates the real one later)
+COPY Cargo.toml Cargo.lock ./
+RUN mkdir -p .tuono && echo 'fn main() {}' > .tuono/main.rs
+
+# Tuono CLI (cached unless its version in package.json changes)
+RUN TUONO_VERSION=$(jq -r '.dependencies.tuono' package.json) && cargo install tuono@${TUONO_VERSION}
+
+# Dependency pre-build (cached unless manifests change)
+RUN cargo build --release
+
+# App build (only the app crate recompiles)
+COPY . .
+RUN tuono build && cargo build --release
 
 # Final runtime image
 FROM ghcr.io/linuxserver/baseimage-debian:trixie@sha256:2a4e23bd3c4e652c22d354d450bdd1a95892e51a47317796c8251c1a75f54aff
