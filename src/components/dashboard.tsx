@@ -38,7 +38,7 @@ const AppIcon = memo(({ app, isDragging, isLocked }: { app: App; isDragging: boo
 });
 AppIcon.displayName = "AppIcon";
 
-export default function Dashboard({ username, weather, background }: { username: string | undefined; weather: { lat: number; long: number } | undefined; background: string | null | undefined }) {
+export default function Dashboard({ username, weather, background, version, commitSha }: { username: string | undefined; weather: { lat: number; long: number } | undefined; background: string | null | undefined; version: string | undefined; commitSha: string | undefined }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ["metrics-data"],
         queryFn: async () => {
@@ -66,6 +66,7 @@ export default function Dashboard({ username, weather, background }: { username:
     const [allApps, setAllApps] = useState<App[]>([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isLocked, setIsLocked] = useState(true);
+    const [isAnonymized, setIsAnonymized] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [columns, setColumns] = useState(5);
@@ -380,7 +381,13 @@ export default function Dashboard({ username, weather, background }: { username:
                             </Droppable>
                         </CardContent>
                     </Card>
-                    <ExpandableDataSection />
+                    <ExpandableDataSection isAnonymized={isAnonymized} />
+                    <footer className="mt-12 text-center text-xs text-zinc-500">
+                        <span onDoubleClick={() => setIsAnonymized(!isAnonymized)} className="cursor-default select-none">
+                            v{version ?? "dev"}
+                            {commitSha && <span> · {commitSha}</span>}
+                        </span>
+                    </footer>
                 </div>
             </DragDropContext>
         );

@@ -15,6 +15,8 @@ pub struct IndexData {
     username: String,
     weather: WeatherData,
     background: Option<String>,
+    version: String,
+    commit_sha: String,
 }
 
 #[tuono_lib::handler]
@@ -29,6 +31,8 @@ async fn index_data(_req: Request) -> Response {
         username: config.clone().username,
         weather: weather_data,
         background: config.clone().background_url,
+        version: std::env::var("VERSION").unwrap_or_else(|_| String::from("dev")),
+        commit_sha: std::env::var("COMMIT_SHA").unwrap_or_else(|_| String::from("")),
     };
 
     Response::Props(Props::new(index_data))

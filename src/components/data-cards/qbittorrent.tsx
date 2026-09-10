@@ -3,8 +3,9 @@ import { bytesToSize } from "@/lib/utils";
 import { ArrowDown, ArrowUp, Check, Loader, Pause, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { QBitV2Torrent } from "tuono/types";
+import { FAKE_ISO_NAMES } from "@/lib/anonymize";
 
-export function QBittorrent() {
+export function QBittorrent({ isAnonymized }: { isAnonymized: boolean }) {
     const {
         data: torrents,
         isLoading,
@@ -15,13 +16,15 @@ export function QBittorrent() {
         refetchInterval: 3 * 60 * 1000,
     });
 
-    if (!torrents) return null;
+    const shownTorrents = isAnonymized ? torrents?.map((torrent, index) => ({ ...torrent, name: FAKE_ISO_NAMES[index % FAKE_ISO_NAMES.length] })) : torrents;
 
-    const activeTorrents = torrents.filter((x) => x.state !== "paused").length;
-    const totalDownloadSpeed = torrents.reduce((sum, item) => sum + (item.dlspeed || 0), 0);
-    const totalUploadSpeed = torrents.reduce((sum, item) => sum + (item.upspeed || 0), 0);
+    if (!shownTorrents) return null;
 
-    if (isLoading || error) {
+    const activeTorrents = shownTorrents.filter((x) => x.state !== "paused").length;
+    const totalDownloadSpeed = shownTorrents.reduce((sum, item) => sum + (item.dlspeed || 0), 0);
+    const totalUploadSpeed = shownTorrents.reduce((sum, item) => sum + (item.upspeed || 0), 0);
+
+    if (!isAnonymized && (isLoading || error)) {
         return (
             <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-3">
                 <CardHeader>
@@ -40,11 +43,11 @@ export function QBittorrent() {
                 <CardTitle className="text-lg font-medium text-white">qBittorrent</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto overflow-y-auto max-h-[400px]">
                     <table className="w-full text-sm">
                         <thead className="sr-only sm:not-sr-only">
                             <tr className="text-zinc-400 border-b border-zinc-800">
-                                <th className="text-left pb-2">Name</th>
+                                <th className="text-left pb-2 max-w-[260px]">Name</th>
                                 <th className="text-right pb-2 hidden sm:table-cell">Size</th>
                                 <th className="text-right pb-2 hidden sm:table-cell">Progress</th>
                                 <th className="text-center pb-2">Status</th>
@@ -55,10 +58,12 @@ export function QBittorrent() {
                             </tr>
                         </thead>
                         <tbody>
-                            {torrents.map((torrent, index) => (
+                            {shownTorrents.map((torrent, index) => (
                                 <tr key={index} className="border-b border-zinc-800 last:border-b-0">
-                                    <td className="py-2 text-white">
-                                        <div>{torrent.name}</div>
+                                    <td className="py-2 text-white max-w-[260px]">
+                                        <div className="truncate" title={torrent.name}>
+                                            {torrent.name}
+                                        </div>
                                         <div className="text-zinc-400 text-xs sm:hidden">
                                             {bytesToSize(torrent.size)} | {(torrent.progress * 100).toFixed(1)}% | {torrent.num_seeds}/{torrent.num_leechs}
                                         </div>

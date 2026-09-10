@@ -5,17 +5,26 @@ import { useQuery } from "@tanstack/react-query";
 import { trimText } from "@/lib/utils";
 import type { TautulliV2Session, TautulliV2Sessions } from "tuono/types";
 import { Key } from "react";
+import { FAKE_SERIES_TITLES, FAKE_EPISODE_TITLES, FAKE_USERS } from "@/lib/anonymize";
 
-export function Tautulli() {
+export function Tautulli({ isAnonymized }: { isAnonymized: boolean }) {
     const { data, isLoading, error } = useQuery<TautulliV2Sessions>({
         queryKey: ["tautulli-data"],
         queryFn: () => fetch("/api/tautulli/sessions").then((res) => res.json()),
         refetchInterval: 3 * 60e3,
     });
 
-    const sessions = data?.response.data?.sessions ?? [];
+    const realSessions = data?.response.data?.sessions ?? [];
+    const sessions = isAnonymized
+        ? realSessions.map((session, index) => ({
+              ...session,
+              grandparent_title: FAKE_SERIES_TITLES[index % FAKE_SERIES_TITLES.length],
+              title: FAKE_EPISODE_TITLES[index % FAKE_EPISODE_TITLES.length],
+              user: FAKE_USERS[index % FAKE_USERS.length],
+          }))
+        : realSessions;
 
-    if (!data) return null;
+    if (!isAnonymized && !data) return null;
 
     return (
         <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-1">
@@ -23,7 +32,7 @@ export function Tautulli() {
                 <CardTitle className="text-lg font-medium text-white">Tautulli</CardTitle>
             </CardHeader>
             <CardContent>
-                <h4 className="text-sm font-medium text-zinc-400 mb-2">{isLoading || error ? "..." : sessions.length > 0 ? "Current Active Streams:" : "No Active Streams"}</h4>
+                <h4 className="text-sm font-medium text-zinc-400 mb-2">{!isAnonymized && (isLoading || error) ? "..." : sessions.length > 0 ? "Current Active Streams:" : "No Active Streams"}</h4>
                 <ul className="space-y-2">
                     {sessions.map((session: TautulliV2Session, index: Key | null | undefined) => (
                         <li key={index} className="flex items-center justify-between text-sm">

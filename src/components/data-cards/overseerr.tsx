@@ -4,6 +4,7 @@ import { trimText } from "@/lib/utils";
 import { useQuery, useQueries, UseQueryResult } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { OverseerrV1Request, OverseerrV1Requests, OverseerrV1RequestsCount, TMDB3Movie, TVDBV4SeriesData } from "tuono/types";
+import { FAKE_MEDIA_TITLES, FAKE_USERS } from "@/lib/anonymize";
 
 type MediaDetails = TMDB3Movie | TVDBV4SeriesData;
 
@@ -47,7 +48,7 @@ const RequestItem = ({ request, mediaQuery }: RequestItemProps) => {
     );
 };
 
-export function Overseerr() {
+export function Overseerr({ isAnonymized }: { isAnonymized: boolean }) {
     const { data, isLoading, error } = useQuery({
         queryKey: ["overseerr-data"] as const,
         queryFn: async () => {
@@ -105,10 +106,22 @@ export function Overseerr() {
 
     const requestList = useMemo(() => {
         if (isLoading || error || !data?.requests?.results) return "...";
-        return data.requests.results.map((request, index) => <RequestItem key={`${request.media.tvdbId}-${request.media.tmdbId}-${index}`} request={request} mediaQuery={mediaQueries[index]} />);
-    }, [data?.requests?.results, mediaQueries, isLoading, error]);
+        return data.requests.results.map((request, index) =>
+            isAnonymized ? (
+                <li key={index} className="text-sm">
+                    <Tooltip>
+                        <TooltipTrigger className="cursor-pointer text-zinc-400">
+                            <span className="text-white">{trimText(FAKE_MEDIA_TITLES[index % FAKE_MEDIA_TITLES.length], 25)}</span> <span className="text-zinc-400">by {FAKE_USERS[index % FAKE_USERS.length]}</span>
+                        </TooltipTrigger>
+                    </Tooltip>
+                </li>
+            ) : (
+                <RequestItem key={`${request.media.tvdbId}-${request.media.tmdbId}-${index}`} request={request} mediaQuery={mediaQueries[index]} />
+            )
+        );
+    }, [data?.requests?.results, mediaQueries, isLoading, error, isAnonymized]);
 
-    if (!data) return null;
+    if (!isAnonymized && !data) return null;
 
     return (
         <Card className="backdrop-filter backdrop-blur-lg bg-zinc-900/60 border border-white/10 shadow-lg h-full sm:col-span-1">

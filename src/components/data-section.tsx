@@ -10,7 +10,11 @@ import { AdGuard } from "./data-cards/adguard";
 import { QBittorrent } from "./data-cards/qbittorrent";
 import { Gluetun } from "./data-cards/gluetun";
 
-export function ExpandableDataSection() {
+interface ExpandableDataSectionProps {
+    isAnonymized: boolean;
+}
+
+export function ExpandableDataSection({ isAnonymized }: ExpandableDataSectionProps) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     return (
@@ -25,10 +29,10 @@ export function ExpandableDataSection() {
                     <AdGuard />
                     <Proxmox />
                     <Starr />
-                    <Tautulli />
-                    <Overseerr />
-                    <Gluetun />
-                    <QBittorrent />
+                    <Tautulli isAnonymized={isAnonymized} />
+                    <Overseerr isAnonymized={isAnonymized} />
+                    <Gluetun isAnonymized={isAnonymized} />
+                    <QBittorrent isAnonymized={isAnonymized} />
                 </div>
             )}
         </div>
