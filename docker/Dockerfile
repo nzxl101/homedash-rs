@@ -11,7 +11,7 @@ RUN apt-get update && \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | sh - && \
     apt-get install -y nodejs && \
-    npm install -g pnpm \
+    npm install -g pnpm@12.3.4 \
     && rm -rf /var/lib/apt/lists/*
 
 # Base directory
@@ -19,7 +19,7 @@ WORKDIR /app
 
 # Frontend dependencies (cached unless package.json or lockfile change)
 COPY package.json pnpm-lock.yaml ./
-RUN printf '\nminimumReleaseAge: 0\n' >> pnpm-workspace.yaml && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # Rust manifests + stub entrypoint (tuono regenerates the real one later)
 COPY Cargo.toml Cargo.lock ./
