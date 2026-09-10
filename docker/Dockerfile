@@ -18,8 +18,8 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Frontend dependencies (cached unless package.json or lockfile change)
-COPY package.json pnpm-lock.yaml ./
-RUN printf '\nminimumReleaseAge: 0\n' >> pnpm-workspace.yaml && pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # Rust manifests + stub entrypoint (tuono regenerates the real one later)
 COPY Cargo.toml Cargo.lock ./
