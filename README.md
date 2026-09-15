@@ -1,9 +1,8 @@
-# <img style="height: 200px" src="./public/icon.png">
+# <img style="height: 200px; border-radius: 36px;" src="./public/icon.png">
 
 # homedash-rs
 
-Simple and straightforward dashboard for your homelab.  
-Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in mind.
+A fast, focused home dashboard.
 
 ## Supported apps
 
@@ -22,12 +21,6 @@ Powered by Rust and built with [Tuono](https://github.com/tuono-labs/tuono) in m
 - [x] TVDB
 - [x] HTTP Status
 - [x] Unduck
-
-**Limitations**
-
-- Data cards can not be moved or resized.
-- App drawer grid is hardcoded and can not be changed.
-- **If you'd like to tackle any of these limitations, feel free to open a PR!**
 
 # Screenshots
 
@@ -65,8 +58,8 @@ I'm happy to integrate any new features or bug fixes.
 
 ## Prerequisites
 
-- cargo 1.85.1 or newer
-- nodejs v20.15.0 or newer
+- cargo 1.98.1 or newer
+- nodejs v24.19.0 or newer
 
 ## Run development server
 
