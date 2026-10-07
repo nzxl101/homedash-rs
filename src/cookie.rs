@@ -42,8 +42,8 @@ pub async fn retrieve_cookie(
         let response = client
             .post(url)
             .form(&[
-                ("username", &credentials.username),
-                ("password", &credentials.password),
+                ("username", credentials.username.as_str()),
+                ("password", credentials.password.as_str()),
             ])
             .send()
             .await
