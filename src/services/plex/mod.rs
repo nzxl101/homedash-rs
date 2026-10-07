@@ -37,10 +37,16 @@ async fn req(
     Ok(response)
 }
 
-fn get_attribute(e: &quick_xml::events::BytesStart, attr_name: &[u8]) -> Option<Vec<u8>> {
+fn get_attribute(e: &quick_xml::events::BytesStart<'_>, attr_name: &str) -> Option<String> {
     e.attributes()
-        .find(|a| a.as_ref().unwrap().key.as_ref() == attr_name)
-        .map(|a| a.unwrap().value.into_owned())
+        .find_map(|a| {
+            let attr = a.ok()?;
+            if attr.key.as_ref() == attr_name {
+                Some(attr.value.into_owned())
+            } else {
+                None
+            }
+        })
 }
 
 async fn get_libraries_xml(
@@ -57,18 +63,18 @@ async fn get_libraries_xml(
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Empty(e)) | Ok(Event::Start(e)) => match e.name().as_ref() {
-                b"Directory" => {
-                    let section_type = get_attribute(&e, b"type");
-                    let section_key = get_attribute(&e, b"key");
-                    let section_title = get_attribute(&e, b"title");
+                "Directory" => {
+                    let section_type = get_attribute(&e, "type");
+                    let section_key = get_attribute(&e, "key");
+                    let section_title = get_attribute(&e, "title");
 
                     if let (Some(library_type), Some(name), Some(key)) =
                         (section_type, section_title, section_key)
                     {
                         library.push(PlexLibrary {
-                            library_type: String::from_utf8(library_type).unwrap(),
-                            name: String::from_utf8(name).unwrap(),
-                            key: String::from_utf8(key).unwrap().parse::<u32>()?,
+                            library_type,
+                            name,
+                            key: key.parse::<u32>()?,
                         });
                     }
                 }
@@ -103,8 +109,8 @@ async fn get_library_items(
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Empty(e)) | Ok(Event::Start(e)) => match e.name().as_ref() {
-                b"Directory" => counts += 1,
-                b"Video" => counts += 1,
+                "Directory" => counts += 1,
+                "Video" => counts += 1,
                 _ => (),
             },
             Ok(Event::Eof) => break,
