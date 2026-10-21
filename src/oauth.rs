@@ -1,4 +1,4 @@
-use reqwest::Client;
+use crate::http::client;
 use serde::Serialize;
 use serde_derive::Deserialize;
 use std::{
@@ -31,7 +31,7 @@ pub async fn retrieve_oauth(
     credentials: &APIOauthConfig,
     fields: OAuthFields,
 ) -> Result<OauthValues, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let date_now = SystemTime::now()
         .duration_since(time::UNIX_EPOCH)
         .unwrap()

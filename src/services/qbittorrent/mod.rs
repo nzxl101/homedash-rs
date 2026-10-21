@@ -1,4 +1,5 @@
-use reqwest::{Client, Response};
+use reqwest::{Response};
+use crate::http::client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tuono_lib::Type;
@@ -24,7 +25,7 @@ pub struct QBitV2Torrent {
 }
 
 async fn req(endpoint: String, credentials: APICredsConfig) -> Result<Response, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let url = format!("{}/api/v2/{}", &credentials.url, endpoint);
 
     // Try with cached cookie first

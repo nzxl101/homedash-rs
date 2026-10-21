@@ -1,5 +1,6 @@
 use quick_xml::{events::Event, Reader};
-use reqwest::{Client, Response};
+use reqwest::{Response};
+use crate::http::client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tuono_lib::Type;
@@ -24,7 +25,7 @@ async fn req(
     endpoint: String,
     api_key: String,
 ) -> Result<Response, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let url = format!("{}/{}", base_url, endpoint);
 
     let response = client

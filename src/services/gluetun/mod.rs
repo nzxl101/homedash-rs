@@ -1,4 +1,5 @@
-use reqwest::{Client, Response};
+use reqwest::{Response};
+use crate::http::client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tuono_lib::Type;
@@ -31,7 +32,7 @@ async fn req(
     method: String,
     data: Option<String>,
 ) -> Result<Response, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let url = format!("{}/v1/{}", base_url, endpoint);
 
     if &method == "put" && !data.is_none() {

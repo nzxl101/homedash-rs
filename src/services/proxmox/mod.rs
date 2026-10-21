@@ -1,3 +1,4 @@
+use crate::http::USER_AGENT;
 use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
@@ -89,6 +90,7 @@ pub struct ProxmoxV2NodeStorage {
 
 async fn req(endpoint: String, credentials: APICredsConfig) -> Result<Response, Box<dyn Error>> {
     let client = Client::builder()
+        .user_agent(USER_AGENT)
         .danger_accept_invalid_certs(true)
         .build()?;
     let url = format!("{}/api2/{}", &credentials.url, endpoint);

@@ -1,4 +1,5 @@
-use reqwest::{Client, Response};
+use reqwest::{Response};
+use crate::http::client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tuono_lib::Type;
@@ -18,7 +19,7 @@ pub struct AdGuardStats {
 
 #[allow(deprecated)]
 async fn req(endpoint: String, credentials: APICredsConfig) -> Result<Response, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let url = format!("{}/{}", &credentials.url, endpoint);
 
     let response = client

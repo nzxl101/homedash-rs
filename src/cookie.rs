@@ -1,4 +1,4 @@
-use reqwest::Client;
+use crate::http::client;
 use serde::Serialize;
 use serde_derive::Deserialize;
 use std::error::Error;
@@ -28,7 +28,7 @@ pub async fn retrieve_cookie(
     credentials: &APICredsConfig,
     fields: CookieFields,
 ) -> Result<CookieValues, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
 
     if Some(String::from("qbittorrent")) == fields.request && credentials.enabled {
         let mut values = CookieValues {

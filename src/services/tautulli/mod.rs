@@ -1,4 +1,5 @@
-use reqwest::{Client, Response}; // Remove blocking
+use reqwest::{Response}; // Remove blocking
+use crate::http::client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use tuono_lib::Type;
@@ -52,7 +53,7 @@ async fn req(
     endpoint: String,
     api_key: String,
 ) -> Result<Response, Box<dyn Error>> {
-    let client = Client::new();
+    let client = client();
     let url = format!("{}/api/v2", base_url);
     let response = client
         .get(url)

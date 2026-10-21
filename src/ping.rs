@@ -11,6 +11,7 @@ use std::time::SystemTime;
 use rusqlite::Connection;
 
 use crate::config::ConfigFields;
+use crate::http;
 
 pub fn ping_all_urls(config: &ConfigFields, conn: &Connection) -> Result<(), Box<dyn Error>> {
     let current_time: i64 = SystemTime::now()
@@ -120,6 +121,7 @@ fn ping_url(url: &str) -> Result<u16, Box<dyn Error>> {
 
     thread::spawn(move || {
         let client = reqwest::blocking::Client::builder()
+            .user_agent(http::USER_AGENT)
             .danger_accept_invalid_certs(true) // Accept invalid certificates
             .timeout(Duration::from_secs(2)) // 2s timeout
             .build()
