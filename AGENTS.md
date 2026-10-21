@@ -12,6 +12,11 @@ pnpm build                      # production build -> out/ + target/release/tuon
 pnpm release                    # alias: cargo run --release
 ```
 
+- **Always build with `DEV=1`: `DEV=1 pnpm build`.** Without it, `tuono build`
+  binds to port 3000 and fails with `Failed to bind to port 3000` whenever a
+  dev server or a deployed instance is already running (which is the normal
+  case). `DEV=1` makes the build skip the server binding entirely.
+
 - No lint, typecheck, or test scripts exist. Verification = `pnpm build` (compiles TS + Rust).
 - Tuono version must match across `package.json` (`"tuono"`), `Cargo.toml` (`tuono_lib`), and the installed CLI. Bump all three together.
 
