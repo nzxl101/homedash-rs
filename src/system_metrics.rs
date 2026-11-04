@@ -13,10 +13,12 @@ pub struct SystemMetrics {
 }
 
 pub fn get_system_metrics() -> io::Result<SystemMetrics> {
-    let mut sys = System::new_all();
+    let mut sys = System::new_all()
+        .map_err(|error| io::Error::new(io::ErrorKind::Other, error))?;
     sys.refresh_all();
 
-    let disks = Disks::new_with_refreshed_list();
+    let disks = Disks::new_with_refreshed_list()
+        .map_err(|error| io::Error::new(io::ErrorKind::Other, error))?;
 
     // CPU Usage (average across all cores)
     let cpu_usage = calculate_cpu_usage(&mut sys);
@@ -52,7 +54,7 @@ fn calculate_cpu_usage(sys: &mut System) -> f32 {
         return 0.0;
     }
 
-    cpus.iter().map(|cpu| cpu.cpu_usage()).sum::<f32>() / cpus.len() as f32
+    cpus.iter().map(|cpu| cpu.usage()).sum::<f32>() / cpus.len() as f32
 }
 
 // Calculates memory usage in GB
